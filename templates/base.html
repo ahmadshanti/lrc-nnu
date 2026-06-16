@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     {% endif %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&family=Almarai:wght@300;400;700;800&family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
 
     <style>
         /* ══ Variables ═══════════════════════════════════════════════════ */
@@ -32,14 +32,14 @@
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: {% if LANGUAGE_BIDI %}'Cairo', sans-serif{% else %}'Source Sans 3', sans-serif{% endif %};
+            font-family: {% if LANGUAGE_BIDI %}'Almarai', sans-serif{% else %}'Source Sans 3', sans-serif{% endif %};
             font-size: 16px; line-height: 1.75;
             color: var(--text); background: var(--bg);
             -webkit-font-smoothing: antialiased;
         }
 
         h1, h2, h3, .serif {
-            font-family: {% if LANGUAGE_BIDI %}'Amiri', Georgia, serif{% else %}'Playfair Display', Georgia, serif{% endif %};
+            font-family: {% if LANGUAGE_BIDI %}'Almarai', sans-serif{% else %}'Playfair Display', Georgia, serif{% endif %};
             line-height: 1.3;
         }
 
@@ -131,7 +131,7 @@
 
         /* ══ Stats bar ═══════════════════════════════════════════════════ */
         .stat-figure {
-            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-family: {% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %}, sans-serif;
             font-size: 1.85rem; font-weight: 800; color: #fff; line-height: 1;
         }
         .stat-caption { font-size: 0.7rem; color: rgba(255,255,255,0.65); letter-spacing: 0.05em; margin-top: 0.3rem; }
@@ -150,7 +150,7 @@
         }
         .prog-card-eye { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.55); margin-bottom: 0.3rem; }
         .prog-card-title {
-            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-family: {% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %}, sans-serif;
             font-size: 1.4rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 0.45rem;
         }
         .prog-card-cta { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.07em; text-transform: uppercase; }
@@ -172,7 +172,7 @@
         .article-meta { font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.35rem; }
         .article-meta .cat { color: var(--blue); font-weight: 700; }
         .article-title {
-            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-family: {% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %}, sans-serif;
             font-size: 1.02rem; font-weight: 700; color: var(--text);
             line-height: 1.4; margin-bottom: 0.4rem; transition: color 0.15s;
         }
@@ -247,7 +247,7 @@
             font-size: 0.86rem;
         }
         .site-footer h5 {
-            font-family: {% if LANGUAGE_BIDI %}'Cairo'{% else %}'Source Sans 3'{% endif %}, sans-serif;
+            font-family: {% if LANGUAGE_BIDI %}'Almarai'{% else %}'Source Sans 3'{% endif %}, sans-serif;
             font-weight: 700; font-size: 0.72rem;
             text-transform: uppercase; letter-spacing: 0.14em;
             color: rgba(255,255,255,0.38); margin-bottom: 1.1rem;
@@ -255,7 +255,7 @@
         .site-footer a { color: rgba(255,255,255,0.65); display: block; margin-bottom: 0.45rem; transition: color 0.15s; font-size: 0.84rem; }
         .site-footer a:hover { color: #fff; }
         .footer-brand {
-            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-family: {% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %}, sans-serif;
             font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem;
         }
         .footer-social a {

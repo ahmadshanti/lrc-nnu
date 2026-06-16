@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.db import models
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from ckeditor.widgets import CKEditorWidget
 
 from .models import Announcement, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
+
+RICH_TEXT = {models.TextField: {'widget': CKEditorWidget}}
 
 
 @admin.register(News)
@@ -13,6 +17,7 @@ class NewsAdmin(admin.ModelAdmin):
     search_fields = ('title_en', 'title_ar')
     date_hierarchy = 'date'
     fields = ('title_ar', 'title_en', 'content_ar', 'content_en', 'image', 'is_published')
+    formfield_overrides = RICH_TEXT
 
 
 @admin.register(Announcement)
@@ -39,6 +44,7 @@ class StoryAdmin(admin.ModelAdmin):
     search_fields = ('member_name_en', 'member_name_ar')
     date_hierarchy = 'date'
     fields = ('member_name_ar', 'member_name_en', 'content_ar', 'content_en', 'image')
+    formfield_overrides = RICH_TEXT
 
 
 @admin.register(TeamMember)
@@ -130,3 +136,4 @@ class PageAdmin(admin.ModelAdmin):
         'show_in_nav', 'nav_order',
         'is_published',
     )
+    formfield_overrides = RICH_TEXT

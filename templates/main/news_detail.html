@@ -29,7 +29,7 @@
                 &ensp;{{ item.date|date:"d F Y" }}
             </div>
 
-            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
                        font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;line-height:1.3;
                        margin-bottom:1.5rem;color:var(--text);">
                 {{ item.title }}
@@ -43,7 +43,7 @@
 
             <div style="font-size:1rem;line-height:1.95;color:var(--text);
                         border-top:1px solid var(--border);padding-top:1.75rem;">
-                {{ item.content|linebreaks }}
+                {{ item.content|safe }}
             </div>
 
             <!-- Back link -->

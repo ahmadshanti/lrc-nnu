@@ -67,7 +67,7 @@
                   color:rgba(255,255,255,.42);margin-bottom:.6rem;">
             {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
         </p>
-        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
                    font-size:clamp(2rem,5vw,3.4rem);font-weight:800;color:#fff;
                    line-height:1.18;margin:0;">
             {{ page.title }}
@@ -96,7 +96,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
                 <div class="page-content-area">
-                    {{ page.content|linebreaks }}
+                    {{ page.content|safe }}
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
 <!-- ── CTA strip ─────────────────────────────────────────── -->
 <section style="background:var(--blue-dark);padding:2.75rem 0;text-align:center;margin-top:1.5rem;">
     <div class="container-lg">
-        <h3 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+        <h3 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
                    font-size:1.55rem;font-weight:800;color:#fff;margin-bottom:.65rem;">
             {% trans "Interested in our programs?" %}
         </h3>
