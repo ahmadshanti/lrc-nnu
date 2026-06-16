@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Our Team" %} — LRC{% endblock %}
+
+{% block content %}
+
+<!-- Page header -->
+<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
+    <div class="container-lg">
+        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+            {% trans "Language Resource Center" %}
+        </p>
+        <h1 style="font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;margin:0 0 .75rem;">
+            {% trans "Our Distinguished Faculty" %}
+        </h1>
+        <p style="font-size:.98rem;color:var(--text-muted);max-width:580px;line-height:1.8;margin:0;">
+            {% trans "A passionate group of world-class educators and administrators dedicated to fostering cross-cultural understanding through inspired language learning." %}
+        </p>
+    </div>
+</div>
+
+{% if members %}
+
+<!-- ── Leadership ──────────────────────────────────────────────────────── -->
+{% with leaders=members|dictsort:"category" %}
+<section style="padding:3rem 0;">
+    <div class="container-lg">
+
+        <div class="d-flex align-items-center gap-2 mb-3" style="border-bottom:2px solid var(--blue);padding-bottom:.65rem;">
+            <i class="bi bi-stars" style="color:var(--orange);font-size:1.1rem;"></i>
+            <h2 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin:0;color:var(--text);">
+                {% trans "Leadership" %}
+            </h2>
+        </div>
+
+        <div class="row g-4 mb-5">
+            {% for member in members %}
+            {% if member.category == 'leadership' %}
+            <div class="col-lg-6">
+                <div style="border:1px solid var(--border);display:flex;gap:0;overflow:hidden;height:100%;">
+                    {% if member.image %}
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}"
+                         style="width:130px;height:auto;min-height:160px;object-fit:cover;flex-shrink:0;">
+                    {% else %}
+                    <div style="width:130px;min-height:160px;background:var(--blue-dark);display:flex;align-items:center;
+                                justify-content:center;flex-shrink:0;font-size:2rem;font-weight:800;color:rgba(255,255,255,.35);">
+                        {{ member.name|first|upper }}
+                    </div>
+                    {% endif %}
+                    <div style="padding:1.4rem;display:flex;flex-direction:column;justify-content:center;">
+                        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange);margin-bottom:.2rem;">
+                            {% trans "Director" %}
+                        </div>
+                        <div style="font-weight:700;font-size:1.05rem;color:var(--text);margin-bottom:.25rem;">{{ member.name }}</div>
+                        <div style="font-size:.8rem;font-weight:600;color:var(--blue);margin-bottom:.75rem;">{{ member.role }}</div>
+                        {% if member.bio %}
+                        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.75;margin:0;">{{ member.bio|truncatechars:150 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- ── Academic & Admin Staff ──────────────────────────────────── -->
+        <div class="d-flex align-items-center gap-2 mb-3" style="border-bottom:2px solid var(--blue);padding-bottom:.65rem;">
+            <i class="bi bi-person-workspace" style="color:var(--orange);font-size:1.1rem;"></i>
+            <h2 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin:0;color:var(--text);">
+                {% trans "Academic Staff" %}
+            </h2>
+        </div>
+
+        <div class="row g-4">
+            {% for member in members %}
+            {% if member.category != 'leadership' %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div style="border:1px solid var(--border);text-align:center;padding:1.6rem;height:100%;">
+                    {% if member.image %}
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}"
+                         style="width:84px;height:84px;border-radius:50%;object-fit:cover;
+                                border:3px solid var(--border);margin:0 auto .85rem;display:block;">
+                    {% else %}
+                    <div style="width:84px;height:84px;border-radius:50%;background:var(--blue);
+                                display:flex;align-items:center;justify-content:center;
+                                margin:0 auto .85rem;font-size:1.5rem;font-weight:800;color:#fff;">
+                        {{ member.name|first|upper }}
+                    </div>
+                    {% endif %}
+                    <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:.2rem;">{{ member.name }}</div>
+                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:.7rem;">
+                        {{ member.role }}
+                    </div>
+                    {% if member.bio %}
+                    <p style="font-size:.82rem;color:var(--text-muted);line-height:1.7;
+                               border-top:1px solid var(--border);padding-top:.7rem;margin:0;">
+                        {{ member.bio|truncatechars:100 }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endwith %}
+
+{% else %}
+<div class="container-lg py-5">
+    <p style="color:var(--text-muted);">{% trans "Team members coming soon." %}</p>
+</div>
+{% endif %}
+
+<!-- ── Join CTA ─────────────────────────────────────────────────────────── -->
+<section style="background:var(--blue);padding:3rem 0;text-align:center;">
+    <div class="container-lg">
+        <h2 style="color:#fff;font-size:1.6rem;font-weight:800;margin-bottom:.6rem;font-family:inherit;">
+            {% trans "Join Our Language Community" %}
+        </h2>
+        <p style="color:rgba(255,255,255,.7);font-size:.95rem;max-width:480px;margin:0 auto 1.5rem;line-height:1.8;">
+            {% trans "Whether you are a student looking to master a new language or a professional seeking excellence, our team is here to help." %}
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'main:contact' %}"
+               style="display:inline-block;background:#fff;color:var(--blue);
+                      padding:.65rem 1.75rem;font-weight:700;font-size:.88rem;letter-spacing:.05em;
+                      text-decoration:none;transition:opacity .15s;"
+               onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+                {% trans "Explore Programs" %}
+            </a>
+            <a href="{% url 'main:contact' %}"
+               style="display:inline-block;background:transparent;color:rgba(255,255,255,.85);
+                      padding:.65rem 1.75rem;font-weight:700;font-size:.88rem;letter-spacing:.05em;
+                      border:2px solid rgba(255,255,255,.4);text-decoration:none;transition:border-color .15s;"
+               onmouseover="this.style.borderColor='rgba(255,255,255,.9)'"
+               onmouseout="this.style.borderColor='rgba(255,255,255,.4)'">
+                {% trans "Contact Faculty" %}
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

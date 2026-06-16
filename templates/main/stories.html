@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Success Stories" %} — LRC{% endblock %}
+
+{% block content %}
+
+<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
+    <div class="container-lg">
+        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+            {% trans "Language Resource Center" %}
+        </p>
+        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin:0;">{% trans "Success Stories" %}</h1>
+    </div>
+</div>
+
+<div class="container-lg py-4 pb-5">
+    {% if stories %}
+    <div class="row g-4">
+        {% for story in stories %}
+        <div class="col-md-6 col-lg-4">
+            <div class="testi-card">
+                <div class="d-flex align-items-center gap-3">
+                    {% if story.image %}
+                    <img src="{{ story.image.url }}" class="story-avatar" alt="{{ story.member_name }}">
+                    {% else %}
+                    <div class="story-avatar-ph">{{ story.member_name|first|upper }}</div>
+                    {% endif %}
+                    <div>
+                        <div style="font-weight:700;font-size:.95rem;color:var(--text);">{{ story.member_name }}</div>
+                        <div style="font-size:.74rem;color:var(--text-muted);">{{ story.date|date:"F Y" }}</div>
+                    </div>
+                </div>
+                <p class="testi-quote">&ldquo; {{ story.content }} &rdquo;</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="color:var(--text-muted);padding:3rem 0;">{% trans "No stories yet." %}</p>
+    {% endif %}
+</div>
+
+{% endblock %}

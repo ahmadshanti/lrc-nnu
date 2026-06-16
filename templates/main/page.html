@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page.title }} — {% trans "Language Resource Center" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+.page-hero {
+    position: relative;
+    min-height: 52vh;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+}
+.page-hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: pageKenBurns 12s ease-out forwards;
+}
+@keyframes pageKenBurns {
+    from { transform: scale(1.06); }
+    to   { transform: scale(1.0); }
+}
+.page-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8,18,50,.92) 25%, rgba(8,18,50,.40) 100%);
+    z-index: 1;
+}
+.page-hero-text {
+    position: relative;
+    z-index: 2;
+    padding: 2.75rem 0 2.75rem;
+    width: 100%;
+    animation: fadeSlideUp 0.7s ease-out both;
+}
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.page-content-area {
+    font-size: 1.07rem;
+    line-height: 2;
+    color: var(--text);
+}
+.page-content-area p     { margin-bottom: 1.4rem; }
+.page-content-area ul,
+.page-content-area ol    { padding-inline-start: 1.5rem; margin-bottom: 1.4rem; }
+.page-content-area li    { margin-bottom: .55rem; }
+.page-content-area h2    { font-size: 1.35rem; font-weight: 700; margin-top: 2rem; margin-bottom: .9rem; }
+.page-content-area h3    { font-size: 1.1rem;  font-weight: 700; margin-top: 1.5rem; margin-bottom: .7rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if page.banner_image %}
+<!-- ── Full-width hero banner ────────────────────────────── -->
+<div class="page-hero">
+    <img class="page-hero-img" src="{{ page.banner_image.url }}" alt="{{ page.title }}">
+    <div class="page-hero-overlay"></div>
+    <div class="container-lg page-hero-text">
+        <p style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.17em;
+                  color:rgba(255,255,255,.42);margin-bottom:.6rem;">
+            {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
+        </p>
+        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+                   font-size:clamp(2rem,5vw,3.4rem);font-weight:800;color:#fff;
+                   line-height:1.18;margin:0;">
+            {{ page.title }}
+        </h1>
+    </div>
+</div>
+
+{% else %}
+<!-- ── Simple header (no banner) ────────────────────────── -->
+<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.75rem 0 2rem;">
+    <div class="container-lg">
+        <p style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;
+                  color:var(--text-muted);margin-bottom:.5rem;">
+            {% trans "Language Resource Center" %}
+        </p>
+        <h1 style="font-size:clamp(1.7rem,4vw,2.7rem);font-weight:800;color:var(--text);margin:0;">
+            {{ page.title }}
+        </h1>
+    </div>
+</div>
+{% endif %}
+
+<!-- ── Page content ──────────────────────────────────────── -->
+<section style="padding:3.5rem 0 2rem;">
+    <div class="container-lg">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="page-content-area">
+                    {{ page.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA strip ─────────────────────────────────────────── -->
+<section style="background:var(--blue-dark);padding:2.75rem 0;text-align:center;margin-top:1.5rem;">
+    <div class="container-lg">
+        <h3 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+                   font-size:1.55rem;font-weight:800;color:#fff;margin-bottom:.65rem;">
+            {% trans "Interested in our programs?" %}
+        </h3>
+        <p style="font-size:.92rem;color:rgba(255,255,255,.62);margin-bottom:1.5rem;
+                  max-width:460px;margin-inline:auto;line-height:1.85;">
+            {% trans "Contact us today to learn more about enrollment and available courses." %}
+        </p>
+        <a href="{% url 'main:contact' %}" class="btn-lrc-primary"
+           style="background:var(--orange);border-color:var(--orange);">
+            {% trans "Apply Now" %} →
+        </a>
+    </div>
+</section>
+
+{% endblock %}

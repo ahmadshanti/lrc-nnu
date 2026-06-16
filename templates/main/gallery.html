@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Gallery" %} — LRC{% endblock %}
+
+{% block content %}
+
+<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
+    <div class="container-lg">
+        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+            {% trans "Language Resource Center" %}
+        </p>
+        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin:0 0 .7rem;">
+            {% trans "Visual Journey" %}
+        </h1>
+        <p style="font-size:.95rem;color:var(--text-muted);max-width:540px;line-height:1.8;margin:0;">
+            {% trans "Explore the vibrant community, modern facilities, and cultural exchanges that define the Language Resource Center at An-Najah." %}
+        </p>
+    </div>
+</div>
+
+<div class="container-lg py-4">
+
+    <!-- Filter buttons -->
+    {% if images %}
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <button class="gal-filter on" onclick="filterGal(this,'all')">{% trans "All" %}</button>
+        {% for cat in categories %}
+        {% if cat %}
+        <button class="gal-filter" onclick="filterGal(this,'{{ cat }}')">{{ cat|title }}</button>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="row g-2 pb-5" id="galGrid">
+        {% for img in images %}
+        <div class="col-6 col-md-4 col-lg-3 gal-item" data-cat="{{ img.category }}">
+            <div class="gallery-cell">
+                <img src="{{ img.image.url }}" alt="{{ img.title }}" loading="lazy">
+                <div class="gallery-cell-overlay">
+                    <span>{{ img.title }}{% if img.category %} · {{ img.category }}{% endif %}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <p style="color:var(--text-muted);padding:3rem 0;">{% trans "No images in the gallery yet." %}</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterGal(btn, cat) {
+    document.querySelectorAll('.gal-filter').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    document.querySelectorAll('.gal-item').forEach(item => {
+        item.style.display = (cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

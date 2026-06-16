@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Home" %} — {% trans "Language Resource Center" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Hero slide structure ──────────────────────────────────── */
+.hero-slide-wrapper {
+    position: relative;
+    min-height: 74vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+.hero-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    will-change: transform;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(8,18,50,.72), rgba(8,18,50,.84));
+    z-index: 1;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    width: 100%;
+}
+/* ── Ken Burns & text entrance ──────────────────────────────── */
+@keyframes kenburns {
+    from { transform: scale(1.08); }
+    to   { transform: scale(1.0); }
+}
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.carousel-item.active .hero-bg-img {
+    animation: kenburns 9s ease-out forwards;
+}
+.carousel-item.active .hero-content {
+    animation: fadeSlideUp 0.7s 0.12s ease-out both;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO CAROUSEL ══════════════════════════════════════════════════════ -->
+{% if hero_slides %}
+<div id="heroCarousel" class="carousel carousel-fade"
+     {% if hero_slides|length > 1 %}data-bs-ride="carousel" data-bs-interval="2000"{% endif %}>
+
+    {% if hero_slides|length > 1 %}
+    <!-- Dot indicators -->
+    <div class="carousel-indicators" style="bottom:1.5rem;margin:0;">
+        {% for slide in hero_slides %}
+        <button type="button"
+                data-bs-target="#heroCarousel"
+                data-bs-slide-to="{{ forloop.counter0 }}"
+                {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                style="width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,.8);
+                       background:rgba(255,255,255,.4);opacity:1;transition:background .2s;"
+                aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="carousel-inner">
+        {% for slide in hero_slides %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="hero-slide-wrapper">
+                <img class="hero-bg-img" src="{{ slide.image.url }}" alt="{{ slide.title }}">
+                <div class="hero-overlay"></div>
+                <div class="container-lg hero-content">
+                    <div class="col-xl-8 col-lg-10">
+                        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;
+                                  color:rgba(255,255,255,.5);margin-bottom:.85rem;">
+                            {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
+                        </p>
+                        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+                                   font-size:clamp(2.1rem,5vw,3.75rem);font-weight:800;color:#fff;
+                                   line-height:1.16;margin-bottom:1.35rem;">
+                            {{ slide.title }}
+                        </h1>
+                        {% if slide.subtitle %}
+                        <p style="font-size:1.05rem;color:rgba(255,255,255,.72);max-width:530px;line-height:1.9;margin-bottom:2.25rem;">
+                            {{ slide.subtitle }}
+                        </p>
+                        {% endif %}
+                        <div class="d-flex gap-3 flex-wrap">
+                            {% if slide.cta1_text %}
+                            <a href="{{ slide.get_cta1_url }}" class="btn-lrc-primary">{{ slide.cta1_text }}</a>
+                            {% endif %}
+                            {% if slide.cta2_text %}
+                            <a href="{{ slide.get_cta2_url }}" class="btn-lrc-outline">{{ slide.cta2_text }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if hero_slides|length > 1 %}
+    <button class="carousel-control-prev" type="button"
+            data-bs-target="#heroCarousel" data-bs-slide="prev"
+            style="width:3.5rem;">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button"
+            data-bs-target="#heroCarousel" data-bs-slide="next"
+            style="width:3.5rem;">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    {% endif %}
+
+</div>
+
+{% else %}
+<!-- Fallback when no slides configured -->
+<section style="min-height:74vh;display:flex;align-items:center;
+    background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%);">
+    <div class="container-lg py-5">
+        <div class="col-xl-8 col-lg-10">
+            <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.18em;
+                      color:rgba(255,255,255,.5);margin-bottom:.85rem;">
+                {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
+            </p>
+            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+                       font-size:clamp(2.1rem,5vw,3.75rem);font-weight:800;color:#fff;
+                       line-height:1.16;margin-bottom:1.35rem;">
+                {% trans "Unlocking Global Communication" %}
+            </h1>
+            <p style="font-size:1.05rem;color:rgba(255,255,255,.72);max-width:530px;line-height:1.9;margin-bottom:2.25rem;">
+                {% trans "Empowering students in high-quality language programs that connect cultures, build skills, and open doors to global opportunities." %}
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+                <a href="{% url 'main:contact' %}" class="btn-lrc-primary">{% trans "Explore Programs" %}</a>
+                <a href="{% url 'main:team' %}"    class="btn-lrc-outline">{% trans "Meet Our Team" %}</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ══ STATS BAR ══════════════════════════════════════════════════════════ -->
+{% with s=site_settings %}
+<div style="background:var(--blue);padding:1.25rem 0;">
+    <div class="container-lg">
+        <div class="row g-0 text-center">
+            <div class="col-6 col-md-3" style="padding:.6rem 0;">
+                <div class="stat-figure">{{ s.stat1_number }}</div>
+                <div class="stat-caption">{{ s.stat1_label }}</div>
+            </div>
+            <div class="col-6 col-md-3" style="padding:.6rem 0;border-inline-start:1px solid rgba(255,255,255,.15);">
+                <div class="stat-figure">{{ s.stat2_number }}</div>
+                <div class="stat-caption">{{ s.stat2_label }}</div>
+            </div>
+            <div class="col-6 col-md-3" style="padding:.6rem 0;border-inline-start:1px solid rgba(255,255,255,.15);">
+                <div class="stat-figure">{{ s.stat3_number }}</div>
+                <div class="stat-caption">{{ s.stat3_label }}</div>
+            </div>
+            <div class="col-6 col-md-3" style="padding:.6rem 0;border-inline-start:1px solid rgba(255,255,255,.15);">
+                <div class="stat-figure">{{ s.stat4_number }}</div>
+                <div class="stat-caption">{{ s.stat4_label }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}
+
+<!-- ══ LATEST NEWS + ANNOUNCEMENTS ════════════════════════════════════════ -->
+<section style="padding:3.5rem 0;">
+    <div class="container-lg">
+        <div class="row g-5">
+
+            <div class="col-lg-8">
+                <div class="section-header">
+                    <h2>{% trans "Latest News" %}</h2>
+                    <div class="line"></div>
+                    <a href="{% url 'main:news_list' %}" class="view-all">{% trans "All News" %} →</a>
+                </div>
+                {% if latest_news %}
+                <div class="row g-4">
+                    {% for item in latest_news|slice:":3" %}
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="h-100" style="border:1px solid var(--border);">
+                            <a href="{% url 'main:news_detail' item.pk %}"
+                               style="display:block;overflow:hidden;height:155px;">
+                                {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}"
+                                     style="width:100%;height:155px;object-fit:cover;transition:transform .35s;"
+                                     onmouseover="this.style.transform='scale(1.05)'"
+                                     onmouseout="this.style.transform='scale(1)'">
+                                {% else %}
+                                <div style="width:100%;height:155px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
+                                    <i class="bi bi-image" style="font-size:2rem;color:var(--border);"></i>
+                                </div>
+                                {% endif %}
+                            </a>
+                            <div style="padding:.9rem;">
+                                <div class="article-meta">
+                                    <span class="cat">{% trans "News" %}</span> · {{ item.date|date:"d M Y" }}
+                                </div>
+                                <a href="{% url 'main:news_detail' item.pk %}" style="text-decoration:none;">
+                                    <div class="article-title" style="font-size:.95rem;">{{ item.title|truncatechars:65 }}</div>
+                                </a>
+                                <a href="{% url 'main:news_detail' item.pk %}" class="article-readmore" style="margin-top:.35rem;display:inline-block;">
+                                    {% trans "Read More" %} →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color:var(--text-muted);">{% trans "No news published yet." %}</p>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="section-header">
+                    <h2>{% trans "Announcements" %}</h2>
+                    <div class="line"></div>
+                </div>
+                {% for ann in announcements %}
+                <div class="ann-row">
+                    <span class="ann-date-badge">{{ ann.date|date:"d M" }}</span>
+                    <span class="ann-title">{{ ann.title }}</span>
+                </div>
+                {% empty %}
+                <p style="color:var(--text-muted);font-size:.9rem;">{% trans "No announcements at this time." %}</p>
+                {% endfor %}
+
+                <div style="background:var(--blue);padding:1.5rem;margin-top:1.5rem;">
+                    <h3 style="font-size:1.05rem;font-weight:700;color:#fff;font-family:inherit;margin-bottom:.45rem;">
+                        {% trans "Need Help?" %}
+                    </h3>
+                    <p style="font-size:.84rem;color:rgba(255,255,255,.72);line-height:1.7;margin-bottom:.9rem;">
+                        {% trans "Our team is here to guide you through our programs and services." %}
+                    </p>
+                    <a href="{% url 'main:contact' %}"
+                       style="display:inline-block;background:#fff;color:var(--blue);
+                              padding:.45rem 1.2rem;font-size:.8rem;font-weight:700;
+                              letter-spacing:.05em;text-decoration:none;">
+                        {% trans "Contact Us" %} →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ══ LANGUAGES WE TEACH ═════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 0;background:var(--bg-alt);border-top:1px solid var(--border);">
+    <div class="container-lg">
+        <div class="section-header">
+            <h2>{% trans "Languages We Teach" %}</h2>
+            <div class="line"></div>
+            <a href="{% url 'main:contact' %}" class="view-all">{% trans "Apply Now" %} →</a>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a class="prog-card" href="{% url 'main:contact' %}">
+                    {% if hero_news and hero_news.0.image %}<img src="{{ hero_news.0.image.url }}" alt="">{% endif %}
+                    <div class="prog-card-overlay">
+                        <div class="prog-card-eye">{% trans "Language Program" %}</div>
+                        <div class="prog-card-title">{% trans "English Language" %}</div>
+                        <div class="prog-card-cta">{% trans "Explore" %} →</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a class="prog-card" href="{% url 'main:contact' %}">
+                    {% if hero_news and hero_news.1.image %}<img src="{{ hero_news.1.image.url }}" alt="">{% endif %}
+                    <div class="prog-card-overlay">
+                        <div class="prog-card-eye">{% trans "Language Program" %}</div>
+                        <div class="prog-card-title">{% trans "French Language" %}</div>
+                        <div class="prog-card-cta">{% trans "Explore" %} →</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a class="prog-card" href="{% url 'main:contact' %}">
+                    {% if hero_news and hero_news.2.image %}<img src="{{ hero_news.2.image.url }}" alt="">{% endif %}
+                    <div class="prog-card-overlay">
+                        <div class="prog-card-eye">{% trans "Language Program" %}</div>
+                        <div class="prog-card-title">{% trans "More Languages" %}</div>
+                        <div class="prog-card-cta">{% trans "Explore" %} →</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ STUDENT VOICES ═════════════════════════════════════════════════════ -->
+{% if stories %}
+<section style="padding:3.5rem 0;border-top:1px solid var(--border);">
+    <div class="container-lg">
+        <div class="section-header">
+            <h2>{% trans "Student Voices" %}</h2>
+            <div class="line"></div>
+            <a href="{% url 'main:stories' %}" class="view-all">{% trans "All Stories" %} →</a>
+        </div>
+        <div class="row g-3">
+            {% for story in stories %}
+            <div class="col-md-4">
+                <div class="testi-card">
+                    <div class="d-flex align-items-center gap-3">
+                        {% if story.image %}
+                        <img src="{{ story.image.url }}" class="story-avatar" alt="{{ story.member_name }}">
+                        {% else %}
+                        <div class="story-avatar-ph">{{ story.member_name|first|upper }}</div>
+                        {% endif %}
+                        <div>
+                            <div style="font-weight:700;font-size:.94rem;color:var(--text);">{{ story.member_name }}</div>
+                            <div style="font-size:.74rem;color:var(--text-muted);">{{ story.date|date:"F Y" }}</div>
+                        </div>
+                    </div>
+                    <p class="testi-quote">&ldquo; {{ story.content|truncatechars:145 }} &rdquo;</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ══ JOIN CTA ════════════════════════════════════════════════════════════ -->
+<section style="background:var(--blue-dark);padding:3.5rem 0;text-align:center;">
+    <div class="container-lg">
+        <h2 style="font-family:{% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %},serif;
+                   color:#fff;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;margin-bottom:.75rem;">
+            {% trans "Join Our Language Community" %}
+        </h2>
+        <p style="color:rgba(255,255,255,.65);font-size:1rem;max-width:520px;margin:0 auto 1.75rem;line-height:1.85;">
+            {% trans "Whether you are a student looking to master a new language or a professional seeking excellence, our team is here to help." %}
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'main:contact' %}" class="btn-lrc-primary" style="background:var(--orange);border-color:var(--orange);">
+                {% trans "Explore Programs" %}
+            </a>
+            <a href="{% url 'main:team' %}" class="btn-lrc-outline">
+                {% trans "Meet Our Team" %}
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

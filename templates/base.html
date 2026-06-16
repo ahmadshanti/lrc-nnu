@@ -1,0 +1,464 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% else %}dir="ltr"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans "Language Resource Center" %} — {% trans "An-Najah National University" %}{% endblock %}</title>
+
+    {% if LANGUAGE_BIDI %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    {% else %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    {% endif %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ══ Variables ═══════════════════════════════════════════════════ */
+        :root {
+            --blue:       #1a3a8f;
+            --blue-dark:  #0d1f4f;
+            --orange:     #d97706;
+            --text:       #0f1117;
+            --text-muted: #6b7280;
+            --border:     #e2e5ec;
+            --bg:         #ffffff;
+            --bg-alt:     #f7f8fc;
+        }
+
+        /* ══ Base ════════════════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: {% if LANGUAGE_BIDI %}'Cairo', sans-serif{% else %}'Source Sans 3', sans-serif{% endif %};
+            font-size: 16px; line-height: 1.75;
+            color: var(--text); background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: {% if LANGUAGE_BIDI %}'Amiri', Georgia, serif{% else %}'Playfair Display', Georgia, serif{% endif %};
+            line-height: 1.3;
+        }
+
+        a { color: var(--blue); text-decoration: none; }
+        a:hover { color: var(--blue-dark); }
+        img { display: block; max-width: 100%; }
+
+        /* ══ Top bar ═════════════════════════════════════════════════════ */
+        .topbar {
+            background: var(--blue-dark);
+            padding: 0.3rem 0;
+            font-size: 0.76rem;
+            letter-spacing: 0.02em;
+        }
+        .btn-lang {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.28);
+            color: rgba(255,255,255,0.8);
+            border-radius: 2px;
+            padding: 0.16rem 0.75rem;
+            font-size: 0.74rem; font-weight: 600;
+            letter-spacing: 0.06em; cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .btn-lang:hover { border-color: rgba(255,255,255,0.7); color: #fff; }
+
+        /* ══ Navbar ══════════════════════════════════════════════════════ */
+        .site-nav {
+            background: var(--bg);
+            border-bottom: 2px solid var(--blue);
+            padding: 0;
+        }
+        .site-nav .container-lg { padding-top: 0.65rem; padding-bottom: 0.65rem; }
+
+        .nav-brand-text { color: var(--text); }
+        .nav-brand-name { font-weight: 700; font-size: 0.94rem; line-height: 1.2; display: block; }
+        .nav-brand-sub  { font-size: 0.7rem; color: var(--text-muted); display: block; }
+
+        .site-nav .nav-link {
+            color: var(--text) !important;
+            font-size: 0.84rem; font-weight: 600;
+            letter-spacing: 0.03em;
+            padding: 0.32rem 0.8rem !important;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.15s, border-color 0.15s;
+            border-radius: 0;
+        }
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link.active {
+            color: var(--blue) !important;
+            border-bottom-color: var(--blue);
+        }
+        .nav-apply {
+            background: var(--orange) !important;
+            color: #fff !important;
+            border-radius: 3px !important;
+            border-bottom: none !important;
+            padding: 0.36rem 1.1rem !important;
+            font-size: 0.8rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.05em;
+            transition: opacity 0.15s !important;
+            margin-bottom: 0 !important;
+        }
+        .nav-apply:hover { opacity: 0.88; color: #fff !important; }
+
+        .site-nav .navbar-toggler {
+            border: 1px solid var(--border); border-radius: 2px;
+            padding: 0.28rem 0.45rem;
+        }
+
+        /* ══ Hero CTA buttons ════════════════════════════════════════════ */
+        .btn-lrc-primary {
+            display: inline-block; background: var(--blue); color: #fff;
+            padding: 0.72rem 1.85rem; font-weight: 700; font-size: 0.88rem;
+            letter-spacing: 0.05em; border: 2px solid var(--blue);
+            text-decoration: none; transition: background 0.15s;
+        }
+        .btn-lrc-primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); color: #fff; }
+
+        .btn-lrc-outline {
+            display: inline-block; background: transparent; color: #fff;
+            padding: 0.72rem 1.85rem; font-weight: 700; font-size: 0.88rem;
+            letter-spacing: 0.05em; border: 2px solid rgba(255,255,255,0.5);
+            text-decoration: none; transition: border-color 0.15s, color 0.15s;
+        }
+        .btn-lrc-outline:hover { border-color: #fff; color: #fff; }
+
+        /* ══ Stats bar ═══════════════════════════════════════════════════ */
+        .stat-figure {
+            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-size: 1.85rem; font-weight: 800; color: #fff; line-height: 1;
+        }
+        .stat-caption { font-size: 0.7rem; color: rgba(255,255,255,0.65); letter-spacing: 0.05em; margin-top: 0.3rem; }
+
+        /* ══ Program cards ═══════════════════════════════════════════════ */
+        .prog-card {
+            position: relative; height: 260px; overflow: hidden;
+            display: block; text-decoration: none; background: var(--blue-dark);
+        }
+        .prog-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: opacity 0.3s, transform 0.4s; }
+        .prog-card:hover img { opacity: 0.35; transform: scale(1.05); }
+        .prog-card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(8,18,50,0.92) 40%, rgba(8,18,50,0.25) 100%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem;
+        }
+        .prog-card-eye { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255,255,255,0.55); margin-bottom: 0.3rem; }
+        .prog-card-title {
+            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-size: 1.4rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 0.45rem;
+        }
+        .prog-card-cta { font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 0.07em; text-transform: uppercase; }
+
+        /* ══ Testimonial card ════════════════════════════════════════════ */
+        .testi-card { border: 1px solid var(--border); padding: 1.6rem; height: 100%; border-top: 3px solid var(--blue); }
+        .testi-quote { font-size: 0.88rem; color: var(--text-muted); line-height: 1.85; font-style: italic; margin-top: 0.9rem; border-top: 1px solid var(--border); padding-top: 0.9rem; }
+
+        /* ══ Section header ══════════════════════════════════════════════ */
+        .section-header {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;
+        }
+        .section-header h2 { font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0; white-space: nowrap; }
+        .section-header .line { flex: 1; height: 1px; background: var(--border); }
+        .section-header .view-all { font-size: 0.78rem; font-weight: 600; color: var(--blue); white-space: nowrap; letter-spacing: 0.04em; }
+
+        /* ══ News article ════════════════════════════════════════════════ */
+        .article-meta { font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .article-meta .cat { color: var(--blue); font-weight: 700; }
+        .article-title {
+            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-size: 1.02rem; font-weight: 700; color: var(--text);
+            line-height: 1.4; margin-bottom: 0.4rem; transition: color 0.15s;
+        }
+        a:hover .article-title { color: var(--blue); }
+        .article-excerpt { font-size: 0.86rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 0.6rem; }
+        .article-readmore { font-size: 0.78rem; font-weight: 700; color: var(--blue); letter-spacing: 0.04em; }
+
+        /* ══ Announcement ════════════════════════════════════════════════ */
+        .ann-row { display: flex; align-items: baseline; gap: 0.85rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+        .ann-date-badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--bg); background: var(--blue); padding: 0.18rem 0.5rem; line-height: 1.4; }
+        .ann-title { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+        /* ══ Gallery ═════════════════════════════════════════════════════ */
+        .gallery-cell { position: relative; overflow: hidden; aspect-ratio: 4/3; background: var(--bg-alt); }
+        .gallery-cell img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s; }
+        .gallery-cell:hover img { transform: scale(1.05); }
+        .gallery-cell-overlay {
+            position: absolute; inset: 0;
+            background: rgba(10,20,55,0.56);
+            display: flex; align-items: flex-end; padding: 0.75rem;
+            opacity: 0; transition: opacity 0.25s;
+        }
+        .gallery-cell:hover .gallery-cell-overlay { opacity: 1; }
+        .gallery-cell-overlay span { font-size: 0.78rem; font-weight: 600; color: #fff; }
+
+        /* Gallery filter */
+        .gal-filter {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-muted); padding: 0.3rem 1.1rem;
+            font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: all 0.15s; border-radius: 2px;
+        }
+        .gal-filter.on, .gal-filter:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+        /* ══ Story / Avatar ══════════════════════════════════════════════ */
+        .story-avatar { width: 56px; height: 56px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); }
+        .story-avatar-ph { width: 56px; height: 56px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 1.1rem; }
+
+        /* ══ Form inputs ═════════════════════════════════════════════════ */
+        .lrc-input {
+            width: 100%; border: 1px solid var(--border);
+            padding: 0.65rem 0.85rem; font-size: 0.95rem;
+            border-radius: 0; outline: none; font-family: inherit;
+            background: #fff; transition: border-color 0.15s;
+        }
+        .lrc-input:focus { border-color: var(--blue); }
+        .lrc-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); display: block; margin-bottom: 0.4rem; }
+
+        /* ══ Page title ══════════════════════════════════════════════════ */
+        .page-title-bar { border-bottom: 1px solid var(--border); padding: 2.5rem 0 1.5rem; margin-bottom: 2.5rem; }
+        .page-title-bar h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; margin: 0; }
+
+        /* ══ News sidebar ════════════════════════════════════════════════ */
+        .sidebar-card { border: 1px solid var(--border); margin-bottom: 1.5rem; }
+        .sidebar-card-head { border-bottom: 2px solid var(--blue); padding: 0.85rem 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text); }
+        .sidebar-card-body { padding: 0.5rem 1rem; }
+        .sidebar-news-item { display: flex; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+        .sidebar-news-item:last-child { border-bottom: none; }
+        .sidebar-news-thumb { width: 60px; height: 44px; object-fit: cover; flex-shrink: 0; }
+        .sidebar-news-title { font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+        .sidebar-news-date  { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* ══ Utility ═════════════════════════════════════════════════════ */
+        .text-blue { color: var(--blue); }
+        .bg-alt { background: var(--bg-alt); }
+
+        /* ══ Footer ══════════════════════════════════════════════════════ */
+        .site-footer {
+            background: #0d1f4f;
+            color: rgba(255,255,255,0.7);
+            padding: 3.5rem 0 0;
+            font-size: 0.86rem;
+        }
+        .site-footer h5 {
+            font-family: {% if LANGUAGE_BIDI %}'Cairo'{% else %}'Source Sans 3'{% endif %}, sans-serif;
+            font-weight: 700; font-size: 0.72rem;
+            text-transform: uppercase; letter-spacing: 0.14em;
+            color: rgba(255,255,255,0.38); margin-bottom: 1.1rem;
+        }
+        .site-footer a { color: rgba(255,255,255,0.65); display: block; margin-bottom: 0.45rem; transition: color 0.15s; font-size: 0.84rem; }
+        .site-footer a:hover { color: #fff; }
+        .footer-brand {
+            font-family: {% if LANGUAGE_BIDI %}'Amiri'{% else %}'Playfair Display'{% endif %}, serif;
+            font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem;
+        }
+        .footer-social a {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6) !important; font-size: 0.95rem;
+            margin-bottom: 0; margin-inline-end: 0.4rem; border-radius: 2px;
+            transition: background 0.15s, border-color 0.15s, color 0.15s !important;
+        }
+        .footer-social a:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.5); color: #fff !important; }
+        .footer-bottom { background: rgba(0,0,0,0.22); padding: 1rem 0; margin-top: 3rem; font-size: 0.75rem; color: rgba(255,255,255,0.32); }
+
+        /* ══ Scroll top ══════════════════════════════════════════════════ */
+        #scrollTop {
+            position: fixed; bottom: 24px;
+            {% if LANGUAGE_BIDI %}left: 24px;{% else %}right: 24px;{% endif %}
+            width: 38px; height: 38px; background: var(--blue);
+            color: #fff; border: none; font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 999;
+        }
+        #scrollTop.on { opacity: 1; pointer-events: auto; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── Top bar ──────────────────────────────────────────────────────────── -->
+<div class="topbar">
+    <div class="container-lg d-flex justify-content-between align-items-center">
+        <span class="text-white-50">
+            {% trans "An-Najah National University" %} &ensp;·&ensp; {% trans "Nablus, Palestine" %}
+        </span>
+        <form action="{% url 'set_language' %}" method="post" class="m-0">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            {% if LANGUAGE_CODE == 'ar' %}
+            <button type="submit" name="language" value="en" class="btn-lang">EN</button>
+            {% else %}
+            <button type="submit" name="language" value="ar" class="btn-lang">عربي</button>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- ── Navigation ───────────────────────────────────────────────────────── -->
+<nav class="site-nav navbar navbar-expand-lg sticky-top">
+    <div class="container-lg">
+
+        <a href="{% url 'main:home' %}" class="navbar-brand d-flex align-items-center gap-2 text-decoration-none">
+            <img src="{% static 'img/logo.png' %}" alt="LRC Logo" style="height:50px;width:auto;">
+            <span class="nav-brand-text">
+                <span class="nav-brand-name">{% trans "Language Resource Center" %}</span>
+                <span class="nav-brand-sub">{% trans "An-Najah National University" %}</span>
+            </span>
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#siteNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="siteNav">
+            <ul class="navbar-nav {% if LANGUAGE_BIDI %}me-auto{% else %}ms-auto{% endif %} align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                       href="{% url 'main:home' %}">{% trans "Home" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'news_list' %}active{% endif %}"
+                       href="{% url 'main:news_list' %}">{% trans "News" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}"
+                       href="{% url 'main:gallery' %}">{% trans "Gallery" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'stories' %}active{% endif %}"
+                       href="{% url 'main:stories' %}">{% trans "Stories" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'team' %}active{% endif %}"
+                       href="{% url 'main:team' %}">{% trans "Team" %}</a>
+                </li>
+                {% for nav_page in nav_pages %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.kwargs.slug == nav_page.slug %}active{% endif %}"
+                       href="{{ nav_page.get_absolute_url }}">{{ nav_page.title }}</a>
+                </li>
+                {% endfor %}
+                <li class="nav-item {% if LANGUAGE_BIDI %}me-lg-2{% else %}ms-lg-2{% endif %}">
+                    <a class="nav-link nav-apply" href="{% url 'main:contact' %}">{% trans "Apply Now" %}</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<!-- ── Page Content ─────────────────────────────────────────────────────── -->
+{% block content %}{% endblock %}
+
+<!-- ── Footer ───────────────────────────────────────────────────────────── -->
+{% with s=site_settings %}
+<footer class="site-footer">
+    <div class="container-lg">
+        <div class="row g-5">
+
+            <!-- Brand -->
+            <div class="col-lg-4">
+                <div class="footer-brand">{% trans "Language Resource Center" %}</div>
+                <p style="color:rgba(255,255,255,0.52);font-size:0.84rem;line-height:1.8;margin-bottom:1.25rem;">
+                    {{ s.footer_desc }}
+                </p>
+                <div class="footer-social">
+                    {% if s.facebook_url %}
+                    <a href="{{ s.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    {% endif %}
+                    {% if s.instagram_url %}
+                    <a href="{{ s.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    {% endif %}
+                    {% if s.youtube_url %}
+                    <a href="{{ s.youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                    {% endif %}
+                    {% if s.linkedin_url %}
+                    <a href="{{ s.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
+                    {% endif %}
+                    {% if not s.facebook_url and not s.instagram_url and not s.youtube_url and not s.linkedin_url %}
+                    <span style="font-size:.75rem;color:rgba(255,255,255,.3);">—</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick links -->
+            <div class="col-lg-2 col-6">
+                <h5>{% trans "Quick Links" %}</h5>
+                <a href="{% url 'main:home' %}">{% trans "Home" %}</a>
+                <a href="{% url 'main:news_list' %}">{% trans "News" %}</a>
+                <a href="{% url 'main:gallery' %}">{% trans "Gallery" %}</a>
+                <a href="{% url 'main:stories' %}">{% trans "Stories" %}</a>
+                <a href="{% url 'main:team' %}">{% trans "Team" %}</a>
+                <a href="{% url 'main:contact' %}">{% trans "Contact" %}</a>
+            </div>
+
+            <!-- Resources (dynamic pages) -->
+            <div class="col-lg-2 col-6">
+                <h5>{% trans "Resources" %}</h5>
+                {% for nav_page in nav_pages %}
+                <a href="{{ nav_page.get_absolute_url }}">{{ nav_page.title }}</a>
+                {% endfor %}
+                <a href="https://www.najah.edu" target="_blank" rel="noopener">{% trans "University Portal" %}</a>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-lg-4">
+                <h5>{% trans "Contact" %}</h5>
+                <p style="color:rgba(255,255,255,0.52);font-size:0.84rem;line-height:2.1;margin:0;">
+                    {% if s.contact_address %}
+                    <i class="bi bi-geo-alt" style="color:var(--orange);"></i>
+                    &ensp;{{ s.contact_address }}<br>
+                    {% endif %}
+                    {% if s.contact_email %}
+                    <i class="bi bi-envelope" style="color:var(--orange);"></i>
+                    &ensp;<a href="mailto:{{ s.contact_email }}"
+                             style="display:inline;color:rgba(255,255,255,.65);">{{ s.contact_email }}</a><br>
+                    {% endif %}
+                    {% if s.contact_phone %}
+                    <i class="bi bi-telephone" style="color:var(--orange);"></i>
+                    &ensp;{{ s.contact_phone }}
+                    {% endif %}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container-lg d-flex flex-wrap justify-content-between">
+            <span>© {% now "Y" %} {% trans "Language Resource Center — An-Najah National University" %}</span>
+            <span>{% trans "All rights reserved" %}</span>
+        </div>
+    </div>
+</footer>
+{% endwith %}
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    window.addEventListener('scroll', () => {
+        document.getElementById('scrollTop').classList.toggle('on', window.scrollY > 400);
+    });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
