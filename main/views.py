@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Announcement, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
@@ -50,7 +52,21 @@ def team(request):
 
 def contact(request):
     if request.method == 'POST':
-        messages.success(request, 'Thank you for your message. We will get back to you soon.')
+        name    = request.POST.get('name', '')
+        email   = request.POST.get('email', '')
+        subject = request.POST.get('subject', 'LRC Contact Form')
+        message = request.POST.get('message', '')
+        try:
+            send_mail(
+                subject=f'[LRC] {subject}',
+                message=f'From: {name} <{email}>\n\n{message}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.CONTACT_EMAIL],
+                fail_silently=False,
+            )
+            messages.success(request, 'تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.')
+        except Exception:
+            messages.error(request, 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.')
         return redirect('main:contact')
     return render(request, 'main/contact.html', {})
 
