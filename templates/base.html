@@ -289,15 +289,24 @@
         <span class="text-white-50">
             {% trans "An-Najah National University" %} &ensp;·&ensp; {% trans "Nablus, Palestine" %}
         </span>
-        <form action="{% url 'set_language' %}" method="post" class="m-0">
+        <form action="{% url 'set_language' %}" method="post" class="m-0" id="lang-form">
             {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.path }}">
+            <input name="next" type="hidden" id="lang-next" value="{{ request.path }}">
             {% if LANGUAGE_CODE == 'ar' %}
-            <button type="submit" name="language" value="en" class="btn-lang">EN</button>
+            <button type="button" class="btn-lang" onclick="switchLang('en')">EN</button>
             {% else %}
-            <button type="submit" name="language" value="ar" class="btn-lang">عربي</button>
+            <button type="button" class="btn-lang" onclick="switchLang('ar')">عربي</button>
             {% endif %}
         </form>
+        <script>
+        function switchLang(lang) {
+            var path = window.location.pathname;
+            var newPath = path.replace(/^\/(ar|en)\//, '/' + lang + '/');
+            if (newPath === path) newPath = '/' + lang + '/';
+            document.getElementById('lang-next').value = newPath;
+            document.getElementById('lang-form').submit();
+        }
+        </script>
     </div>
 </div>
 
