@@ -3,18 +3,159 @@
 
 {% block title %}{% trans "Our Team" %} — LRC{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ── Hero header ──────────────────────────────────────── */
+.team-hero {
+    background: linear-gradient(135deg, #0a1940 0%, var(--blue) 100%);
+    padding: 3.5rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.team-hero::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,6,.12) 0%, transparent 70%);
+    top: -150px;
+    {% if LANGUAGE_BIDI %}left: -100px;{% else %}right: -100px;{% endif %}
+}
+
+/* ── Leader card ──────────────────────────────────────── */
+.leader-card {
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    height: 100%;
+    transition: transform .35s ease, box-shadow .35s ease;
+}
+.leader-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.12);
+}
+.leader-img {
+    width: 160px;
+    min-height: 200px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.leader-ph {
+    width: 160px;
+    min-height: 200px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: rgba(255,255,255,.3);
+}
+
+/* ── Staff card ───────────────────────────────────────── */
+.staff-card {
+    text-align: center;
+    padding: 2rem 1.2rem 1.5rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    height: 100%;
+    position: relative;
+    transition: transform .35s ease, box-shadow .35s ease;
+    overflow: hidden;
+}
+.staff-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--orange));
+    transform: scaleX(0);
+    transition: transform .35s ease;
+}
+.staff-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.1);
+}
+.staff-card:hover::before {
+    transform: scaleX(1);
+}
+.staff-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto .9rem;
+    display: block;
+    border: 4px solid var(--bg-alt);
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    transition: transform .4s ease, box-shadow .4s ease;
+}
+.staff-card:hover .staff-avatar {
+    transform: scale(1.08);
+    box-shadow: 0 8px 24px rgba(26,58,143,.2);
+}
+.staff-avatar-ph {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto .9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--blue), #2563eb);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(26,58,143,.2);
+    transition: transform .4s ease;
+}
+.staff-card:hover .staff-avatar-ph {
+    transform: scale(1.08);
+}
+
+/* ── Section divider ──────────────────────────────────── */
+.team-section-title {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 2rem;
+    padding-bottom: .75rem;
+    border-bottom: 2px solid var(--border);
+}
+.team-section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--blue), #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
-<!-- Page header -->
-<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
-    <div class="container-lg">
-        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+<!-- ── Hero header ─────────────────────────────────────────────────────── -->
+<div class="team-hero">
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <p class="reveal" style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.17em;
+                  color:rgba(255,255,255,.4);margin-bottom:.5rem;">
             {% trans "Language Resource Center" %}
         </p>
-        <h1 style="font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800;margin:0 0 .75rem;">
+        <h1 class="reveal" style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;
+                   margin-bottom:.75rem;">
             {% trans "Our Distinguished Faculty" %}
         </h1>
-        <p style="font-size:.98rem;color:var(--text-muted);max-width:580px;line-height:1.8;margin:0;">
+        <p class="reveal" style="font-size:.98rem;color:rgba(255,255,255,.55);max-width:540px;line-height:1.85;margin:0;">
             {% trans "A passionate group of world-class educators and administrators dedicated to fostering cross-cultural understanding through inspired language learning." %}
         </p>
     </div>
@@ -23,39 +164,43 @@
 {% if members %}
 
 <!-- ── Leadership ──────────────────────────────────────────────────────── -->
-{% with leaders=members|dictsort:"category" %}
-<section style="padding:3rem 0;">
+<section style="padding:3.5rem 0;">
     <div class="container-lg">
 
-        <div class="d-flex align-items-center gap-2 mb-3" style="border-bottom:2px solid var(--blue);padding-bottom:.65rem;">
-            <i class="bi bi-stars" style="color:var(--orange);font-size:1.1rem;"></i>
-            <h2 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin:0;color:var(--text);">
+        <div class="team-section-title reveal">
+            <div class="team-section-icon">
+                <i class="bi bi-stars"></i>
+            </div>
+            <h2 style="font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin:0;color:var(--text);">
                 {% trans "Leadership" %}
             </h2>
         </div>
 
-        <div class="row g-4 mb-5">
+        <div class="row g-4 mb-5 stagger">
             {% for member in members %}
             {% if member.category == 'leadership' %}
-            <div class="col-lg-6">
-                <div style="border:1px solid var(--border);display:flex;gap:0;overflow:hidden;height:100%;">
+            <div class="col-lg-6 reveal">
+                <div class="leader-card">
                     {% if member.image %}
-                    <img src="{{ member.image.url }}" alt="{{ member.name }}"
-                         style="width:130px;height:auto;min-height:160px;object-fit:cover;flex-shrink:0;">
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}" class="leader-img">
                     {% else %}
-                    <div style="width:130px;min-height:160px;background:var(--blue-dark);display:flex;align-items:center;
-                                justify-content:center;flex-shrink:0;font-size:2rem;font-weight:800;color:rgba(255,255,255,.35);">
-                        {{ member.name|first|upper }}
-                    </div>
+                    <div class="leader-ph">{{ member.name|first|upper }}</div>
                     {% endif %}
-                    <div style="padding:1.4rem;display:flex;flex-direction:column;justify-content:center;">
-                        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--orange);margin-bottom:.2rem;">
+                    <div style="padding:1.6rem;display:flex;flex-direction:column;justify-content:center;">
+                        <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+                                    color:var(--orange);margin-bottom:.25rem;">
                             {% trans "Director" %}
                         </div>
-                        <div style="font-weight:700;font-size:1.05rem;color:var(--text);margin-bottom:.25rem;">{{ member.name }}</div>
-                        <div style="font-size:.8rem;font-weight:600;color:var(--blue);margin-bottom:.75rem;">{{ member.role }}</div>
+                        <div style="font-weight:800;font-size:1.15rem;color:var(--text);margin-bottom:.3rem;">
+                            {{ member.name }}
+                        </div>
+                        <div style="font-size:.82rem;font-weight:600;color:var(--blue);margin-bottom:.85rem;">
+                            {{ member.role }}
+                        </div>
                         {% if member.bio %}
-                        <p style="font-size:.84rem;color:var(--text-muted);line-height:1.75;margin:0;">{{ member.bio|truncatechars:150 }}</p>
+                        <p style="font-size:.85rem;color:var(--text-muted);line-height:1.8;margin:0;">
+                            {{ member.bio|truncatechars:150 }}
+                        </p>
                         {% endif %}
                     </div>
                 </div>
@@ -65,36 +210,35 @@
         </div>
 
         <!-- ── Academic & Admin Staff ──────────────────────────────────── -->
-        <div class="d-flex align-items-center gap-2 mb-3" style="border-bottom:2px solid var(--blue);padding-bottom:.65rem;">
-            <i class="bi bi-person-workspace" style="color:var(--orange);font-size:1.1rem;"></i>
-            <h2 style="font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin:0;color:var(--text);">
+        <div class="team-section-title reveal">
+            <div class="team-section-icon">
+                <i class="bi bi-person-workspace"></i>
+            </div>
+            <h2 style="font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin:0;color:var(--text);">
                 {% trans "Academic Staff" %}
             </h2>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 stagger">
             {% for member in members %}
             {% if member.category != 'leadership' %}
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div style="border:1px solid var(--border);text-align:center;padding:1.6rem;height:100%;">
+            <div class="col-sm-6 col-md-4 col-lg-3 reveal">
+                <div class="staff-card">
                     {% if member.image %}
-                    <img src="{{ member.image.url }}" alt="{{ member.name }}"
-                         style="width:84px;height:84px;border-radius:50%;object-fit:cover;
-                                border:3px solid var(--border);margin:0 auto .85rem;display:block;">
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}" class="staff-avatar">
                     {% else %}
-                    <div style="width:84px;height:84px;border-radius:50%;background:var(--blue);
-                                display:flex;align-items:center;justify-content:center;
-                                margin:0 auto .85rem;font-size:1.5rem;font-weight:800;color:#fff;">
-                        {{ member.name|first|upper }}
-                    </div>
+                    <div class="staff-avatar-ph">{{ member.name|first|upper }}</div>
                     {% endif %}
-                    <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:.2rem;">{{ member.name }}</div>
-                    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);margin-bottom:.7rem;">
+                    <div style="font-weight:700;font-size:1rem;color:var(--text);margin-bottom:.25rem;">
+                        {{ member.name }}
+                    </div>
+                    <div style="display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.06em;
+                                color:var(--blue);background:rgba(26,58,143,.08);
+                                padding:.25rem .75rem;border-radius:20px;margin-bottom:.8rem;">
                         {{ member.role }}
                     </div>
                     {% if member.bio %}
-                    <p style="font-size:.82rem;color:var(--text-muted);line-height:1.7;
-                               border-top:1px solid var(--border);padding-top:.7rem;margin:0;">
+                    <p style="font-size:.83rem;color:var(--text-muted);line-height:1.75;margin:0;">
                         {{ member.bio|truncatechars:100 }}
                     </p>
                     {% endif %}
@@ -106,7 +250,6 @@
 
     </div>
 </section>
-{% endwith %}
 
 {% else %}
 <div class="container-lg py-5">
@@ -114,29 +257,40 @@
 </div>
 {% endif %}
 
-<!-- ── Join CTA ─────────────────────────────────────────────────────────── -->
-<section style="background:var(--blue);padding:3rem 0;text-align:center;">
-    <div class="container-lg">
-        <h2 style="color:#fff;font-size:1.6rem;font-weight:800;margin-bottom:.6rem;font-family:inherit;">
+<!-- ── CTA ─────────────────────────────────────────────────────────────── -->
+<section class="reveal" style="background:linear-gradient(135deg,#0a1940 0%,var(--blue) 100%);
+               padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:10%;left:8%;font-size:5rem;color:rgba(255,255,255,.05);
+                    animation:float1 6s ease-in-out infinite;">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div style="position:absolute;bottom:10%;right:10%;font-size:4rem;color:rgba(255,255,255,.04);
+                    animation:float2 7s ease-in-out infinite;">
+            <i class="bi bi-people-fill"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;
+                    width:60px;height:60px;border-radius:50%;
+                    background:linear-gradient(135deg,var(--orange),#f59e0b);
+                    margin-bottom:1.2rem;animation:pulse 2.5s ease-in-out infinite;
+                    box-shadow:0 6px 24px rgba(217,119,6,.35);">
+            <i class="bi bi-rocket-takeoff-fill" style="font-size:1.4rem;color:#fff;"></i>
+        </div>
+        <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   color:#fff;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:.65rem;">
             {% trans "Join Our Language Community" %}
         </h2>
-        <p style="color:rgba(255,255,255,.7);font-size:.95rem;max-width:480px;margin:0 auto 1.5rem;line-height:1.8;">
+        <p style="color:rgba(255,255,255,.55);font-size:.95rem;max-width:460px;margin:0 auto 1.75rem;line-height:1.85;">
             {% trans "Whether you are a student looking to master a new language or a professional seeking excellence, our team is here to help." %}
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{% url 'main:contact' %}"
-               style="display:inline-block;background:#fff;color:var(--blue);
-                      padding:.65rem 1.75rem;font-weight:700;font-size:.88rem;letter-spacing:.05em;
-                      text-decoration:none;transition:opacity .15s;"
-               onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+            <a href="{% url 'main:contact' %}" class="cta-glow-btn">
+                <i class="bi bi-arrow-right-circle-fill" style="margin-inline-end:.4rem;"></i>
                 {% trans "Explore Programs" %}
             </a>
-            <a href="{% url 'main:contact' %}"
-               style="display:inline-block;background:transparent;color:rgba(255,255,255,.85);
-                      padding:.65rem 1.75rem;font-weight:700;font-size:.88rem;letter-spacing:.05em;
-                      border:2px solid rgba(255,255,255,.4);text-decoration:none;transition:border-color .15s;"
-               onmouseover="this.style.borderColor='rgba(255,255,255,.9)'"
-               onmouseout="this.style.borderColor='rgba(255,255,255,.4)'">
+            <a href="{% url 'main:contact' %}" class="cta-outline-btn">
                 {% trans "Contact Faculty" %}
             </a>
         </div>

@@ -3,63 +3,310 @@
 
 {% block title %}{% trans "Gallery" %} — LRC{% endblock %}
 
+{% block extra_css %}
+<style>
+.gallery-hero {
+    background: linear-gradient(135deg, #0a1940 0%, var(--blue) 100%);
+    padding: 3.5rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.gallery-hero::before {
+    content: '';
+    position: absolute;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,6,.1) 0%, transparent 70%);
+    top: -120px;
+    {% if LANGUAGE_BIDI %}right: -80px;{% else %}left: -80px;{% endif %}
+}
+
+/* Filter pills */
+.gal-pill {
+    background: #fff;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: .5rem 1.4rem;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    border-radius: 50px;
+    transition: all .3s ease;
+}
+.gal-pill:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+}
+.gal-pill.on {
+    background: linear-gradient(135deg, var(--blue), #2563eb);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(26,58,143,.25);
+}
+
+/* Gallery grid */
+.gal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .75rem;
+}
+@media (max-width: 992px) { .gal-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 576px) { .gal-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* Gallery item */
+.gal-card {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    transition: transform .4s ease, box-shadow .4s ease;
+}
+.gal-card:nth-child(1),
+.gal-card:nth-child(6) {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: 1;
+}
+.gal-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s cubic-bezier(.25,.46,.45,.94);
+}
+.gal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.15);
+}
+.gal-card:hover img {
+    transform: scale(1.1);
+}
+.gal-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(8,18,50,.85) 0%, rgba(8,18,50,.0) 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.2rem;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+.gal-card:hover .gal-card-overlay {
+    opacity: 1;
+}
+.gal-card-title {
+    font-weight: 700;
+    font-size: .9rem;
+    color: #fff;
+    margin-bottom: .2rem;
+}
+.gal-card-cat {
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+.gal-card-zoom {
+    position: absolute;
+    top: 1rem;
+    {% if LANGUAGE_BIDI %}left: 1rem;{% else %}right: 1rem;{% endif %}
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: .9rem;
+    opacity: 0;
+    transform: scale(.7);
+    transition: all .35s ease;
+}
+.gal-card:hover .gal-card-zoom {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Filter animation */
+.gal-item-wrap {
+    transition: opacity .4s ease, transform .4s ease;
+}
+.gal-item-wrap.hiding {
+    opacity: 0;
+    transform: scale(.85);
+}
+
+/* Lightbox */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease;
+    backdrop-filter: blur(8px);
+}
+.lightbox.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+.lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 16px 60px rgba(0,0,0,.5);
+    transform: scale(.85);
+    transition: transform .4s ease;
+}
+.lightbox.open img {
+    transform: scale(1);
+}
+.lightbox-close {
+    position: absolute;
+    top: 1.5rem;
+    {% if LANGUAGE_BIDI %}left: 1.5rem;{% else %}right: 1.5rem;{% endif %}
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.25); }
+.lightbox-title {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,.7);
+    font-size: .9rem;
+    font-weight: 600;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
-<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
-    <div class="container-lg">
-        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<div class="gallery-hero">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:12%;right:10%;font-size:4rem;color:rgba(255,255,255,.04);animation:float1 7s ease-in-out infinite;">
+            <i class="bi bi-camera-fill"></i>
+        </div>
+        <div style="position:absolute;bottom:18%;left:8%;font-size:3rem;color:rgba(255,255,255,.05);animation:float2 6s ease-in-out infinite;">
+            <i class="bi bi-images"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <p class="reveal" style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.17em;
+                  color:rgba(255,255,255,.4);margin-bottom:.5rem;">
             {% trans "Language Resource Center" %}
         </p>
-        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin:0 0 .7rem;">
+        <h1 class="reveal" style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;margin-bottom:.7rem;">
             {% trans "Visual Journey" %}
         </h1>
-        <p style="font-size:.95rem;color:var(--text-muted);max-width:540px;line-height:1.8;margin:0;">
+        <p class="reveal" style="font-size:.95rem;color:rgba(255,255,255,.5);max-width:500px;line-height:1.85;margin:0;">
             {% trans "Explore the vibrant community, modern facilities, and cultural exchanges that define the Language Resource Center at An-Najah." %}
         </p>
     </div>
 </div>
 
-<div class="container-lg py-4">
+<!-- ── Gallery ─────────────────────────────────────────────────────────── -->
+<section style="padding:2.5rem 0 4rem;background:var(--bg-alt);">
+    <div class="container-lg">
 
-    <!-- Filter buttons -->
-    {% if images %}
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <button class="gal-filter on" onclick="filterGal(this,'all')">{% trans "All" %}</button>
-        {% for cat in categories %}
-        {% if cat %}
-        <button class="gal-filter" onclick="filterGal(this,'{{ cat }}')">{{ cat|title }}</button>
-        {% endif %}
-        {% endfor %}
-    </div>
+        {% if images %}
+        <!-- Filter pills -->
+        <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center reveal">
+            <button class="gal-pill on" onclick="filterGal(this,'all')">{% trans "All" %}</button>
+            {% for cat in categories %}
+            {% if cat %}
+            <button class="gal-pill" onclick="filterGal(this,'{{ cat }}')">{{ cat|title }}</button>
+            {% endif %}
+            {% endfor %}
+        </div>
 
-    <div class="row g-2 pb-5" id="galGrid">
-        {% for img in images %}
-        <div class="col-6 col-md-4 col-lg-3 gal-item" data-cat="{{ img.category }}">
-            <div class="gallery-cell">
+        <!-- Grid -->
+        <div class="gal-grid reveal" id="galGrid">
+            {% for img in images %}
+            <div class="gal-card gal-item-wrap" data-cat="{{ img.category }}"
+                 onclick="openLightbox('{{ img.image.url }}', '{{ img.title }}')">
                 <img src="{{ img.image.url }}" alt="{{ img.title }}" loading="lazy">
-                <div class="gallery-cell-overlay">
-                    <span>{{ img.title }}{% if img.category %} · {{ img.category }}{% endif %}</span>
+                <div class="gal-card-overlay">
+                    <div class="gal-card-title">{{ img.title }}</div>
+                    {% if img.category %}
+                    <div class="gal-card-cat">{{ img.category }}</div>
+                    {% endif %}
+                </div>
+                <div class="gal-card-zoom">
+                    <i class="bi bi-arrows-fullscreen"></i>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        {% else %}
+        <p style="color:var(--text-muted);padding:3rem 0;text-align:center;">{% trans "No images in the gallery yet." %}</p>
+        {% endif %}
+
     </div>
+</section>
 
-    {% else %}
-    <p style="color:var(--text-muted);padding:3rem 0;">{% trans "No images in the gallery yet." %}</p>
-    {% endif %}
-
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()"><i class="bi bi-x-lg"></i></button>
+    <img id="lightbox-img" src="" alt="">
+    <div class="lightbox-title" id="lightbox-title"></div>
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
 <script>
+function openLightbox(src, title) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-title').textContent = title;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+});
+
 function filterGal(btn, cat) {
-    document.querySelectorAll('.gal-filter').forEach(b => b.classList.remove('on'));
+    document.querySelectorAll('.gal-pill').forEach(function(b) { b.classList.remove('on'); });
     btn.classList.add('on');
-    document.querySelectorAll('.gal-item').forEach(item => {
-        item.style.display = (cat === 'all' || item.dataset.cat === cat) ? '' : 'none';
+
+    document.querySelectorAll('.gal-item-wrap').forEach(function(item) {
+        var show = (cat === 'all' || item.dataset.cat === cat);
+        if (!show) {
+            item.classList.add('hiding');
+            setTimeout(function() { item.style.display = 'none'; }, 350);
+        } else {
+            item.style.display = '';
+            item.classList.remove('hiding');
+        }
     });
 }
 </script>

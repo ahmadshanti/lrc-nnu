@@ -5,169 +5,348 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>.leaflet-control-attribution { display: none !important; }</style>
+<style>
+.leaflet-control-attribution { display: none !important; }
+
+.contact-hero {
+    background: linear-gradient(135deg, #0a1940 0%, var(--blue) 50%, #2563eb 100%);
+    padding: 4rem 0 3.5rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+.contact-hero::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,6,.12) 0%, transparent 70%);
+    top: -150px;
+    {% if LANGUAGE_BIDI %}left: -100px;{% else %}right: -100px;{% endif %}
+}
+.contact-hero::after {
+    content: '';
+    position: absolute;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,.15) 0%, transparent 70%);
+    bottom: -80px;
+    {% if LANGUAGE_BIDI %}right: -60px;{% else %}left: -60px;{% endif %}
+}
+
+/* Form card */
+.contact-form-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,.06);
+    position: relative;
+}
+.contact-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(90deg, var(--blue), var(--orange));
+}
+
+/* Input styling */
+.contact-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    padding: .8rem 1rem;
+    font-size: .92rem;
+    border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    background: var(--bg-alt);
+    transition: border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.contact-input:focus {
+    border-color: var(--blue);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(26,58,143,.08);
+}
+.contact-label {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text);
+    display: block;
+    margin-bottom: .45rem;
+}
+
+/* Submit button */
+.contact-submit {
+    background: linear-gradient(135deg, var(--blue), #2563eb);
+    color: #fff;
+    border: none;
+    padding: .9rem 2.5rem;
+    font-size: .9rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .3s ease;
+    box-shadow: 0 4px 20px rgba(26,58,143,.3);
+    position: relative;
+    overflow: hidden;
+}
+.contact-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(26,58,143,.4);
+}
+.contact-submit::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+    transition: left .5s;
+}
+.contact-submit:hover::after { left: 100%; }
+
+/* Info card */
+.contact-info-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.2rem 1.3rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    transition: transform .3s ease, box-shadow .3s ease;
+    border-inline-start: 4px solid transparent;
+}
+.contact-info-card:hover {
+    transform: translateY(-4px) translateX({% if LANGUAGE_BIDI %}-4px{% else %}4px{% endif %});
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    border-inline-start-color: var(--blue);
+}
+.contact-info-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+/* Map */
+#lrc-map {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+
+/* Social */
+.contact-social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    color: #fff;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.contact-social-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.15);
+    color: #fff;
+}
+</style>
 {% endblock %}
 
 {% block content %}
 
-<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
-    <div class="container-lg text-center">
-        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
-            {% trans "Language Resource Center" %}
-        </p>
-        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin:0 0 .7rem;">
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<div class="contact-hero">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:12%;left:8%;font-size:4rem;color:rgba(255,255,255,.04);animation:float1 7s ease-in-out infinite;">
+            <i class="bi bi-envelope-paper-fill"></i>
+        </div>
+        <div style="position:absolute;bottom:15%;right:10%;font-size:3.5rem;color:rgba(255,255,255,.05);animation:float2 6s ease-in-out infinite;">
+            <i class="bi bi-telephone-fill"></i>
+        </div>
+        <div style="position:absolute;top:30%;right:25%;font-size:2.5rem;color:rgba(255,255,255,.03);animation:float3 8s ease-in-out infinite;">
+            <i class="bi bi-chat-dots-fill"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;
+                    width:64px;height:64px;border-radius:50%;
+                    background:linear-gradient(135deg,var(--orange),#f59e0b);
+                    margin-bottom:1.2rem;animation:pulse 2.5s ease-in-out infinite;
+                    box-shadow:0 6px 24px rgba(217,119,6,.35);">
+            <i class="bi bi-send-fill" style="font-size:1.5rem;color:#fff;"></i>
+        </div>
+        <h1 class="reveal" style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;margin-bottom:.7rem;">
             {% trans "Get in Touch" %}
         </h1>
-        <p style="font-size:.95rem;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.8;">
+        <p class="reveal" style="font-size:.98rem;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto;line-height:1.85;">
             {% trans "Have questions about our language programs? We're here to help you bridge cultural gaps and master new skills." %}
         </p>
     </div>
 </div>
 
+<!-- ── Messages ───────────────────────────────────────────────────────── -->
 {% if messages %}
-<div class="container-lg mt-4">
+<div class="container-lg" style="margin-top:-1.5rem;position:relative;z-index:5;">
     {% for message in messages %}
-    <div style="background:#f0f9f4;border-inline-start:3px solid #198754;padding:1rem 1.25rem;
-                font-size:.92rem;color:#145a32;margin-bottom:.5rem;">
-        <i class="bi bi-check-circle-fill"></i> {{ message }}
+    <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;
+                border-radius:12px;padding:1rem 1.5rem;font-size:.92rem;color:#166534;
+                margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;
+                box-shadow:0 4px 12px rgba(22,101,52,.08);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#22c55e;
+                    display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi bi-check-lg" style="color:#fff;font-size:1rem;"></i>
+        </div>
+        {{ message }}
     </div>
     {% endfor %}
 </div>
 {% endif %}
 
-<div class="container-lg py-5">
-    <div class="row g-5">
+<!-- ── Main content ───────────────────────────────────────────────────── -->
+<section style="padding:3.5rem 0 4rem;background:var(--bg-alt);">
+    <div class="container-lg">
+        <div class="row g-4">
 
-        <!-- Form (left 7) -->
-        <div class="col-lg-7">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.75rem;padding-bottom:.75rem;border-bottom:2px solid var(--blue);">
-                {% trans "Send us a Message" %}
-            </h2>
-            <form method="post" novalidate>
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-sm-6">
-                        <label class="lrc-label">{% trans "Full Name" %} *</label>
-                        <input type="text" name="name" required class="lrc-input">
+            <!-- Form -->
+            <div class="col-lg-7 reveal-left">
+                <div class="contact-form-card">
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.75rem;">
+                        <div style="width:40px;height:40px;border-radius:10px;
+                                    background:linear-gradient(135deg,var(--blue),#2563eb);
+                                    display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-pencil-square" style="color:#fff;font-size:1rem;"></i>
+                        </div>
+                        <h2 style="font-size:1.15rem;font-weight:700;margin:0;color:var(--text);">
+                            {% trans "Send us a Message" %}
+                        </h2>
                     </div>
-                    <div class="col-sm-6">
-                        <label class="lrc-label">{% trans "Email Address" %} *</label>
-                        <input type="email" name="email" required class="lrc-input">
-                    </div>
-                    <div class="col-12">
-                        <label class="lrc-label">{% trans "Subject" %}</label>
-                        <input type="text" name="subject" class="lrc-input">
-                    </div>
-                    <div class="col-12">
-                        <label class="lrc-label">{% trans "Message" %} *</label>
-                        <textarea name="message" rows="6" required class="lrc-input" style="resize:vertical;"></textarea>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit"
-                                style="background:var(--blue);color:#fff;border:none;
-                                       padding:.72rem 2.25rem;font-size:.85rem;font-weight:700;
-                                       text-transform:uppercase;letter-spacing:.1em;cursor:pointer;
-                                       font-family:inherit;transition:background .15s;"
-                                onmouseover="this.style.background='var(--blue-dark)'"
-                                onmouseout="this.style.background='var(--blue)'">
-                            {% trans "Send Message" %} <i class="bi bi-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Contact info (right 5) -->
-        <div class="col-lg-5">
-            <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:1.75rem;padding-bottom:.75rem;border-bottom:2px solid var(--blue);">
-                {% trans "Direct Contact" %}
-            </h2>
-
-            <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2rem;">
-                <div style="display:flex;gap:1rem;align-items:flex-start;">
-                    <div style="width:38px;height:38px;background:var(--blue);border-radius:2px;
-                                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i class="bi bi-geo-alt-fill" style="color:#fff;font-size:1rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.2rem;">{% trans "Address" %}</div>
-                        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7;margin:0;">
-                            {% trans "Language Resource Center" %}<br>
-                            {% trans "An-Najah National University" %}<br>
-                            {% trans "Nablus, West Bank, Palestine" %}
-                        </p>
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:1rem;align-items:flex-start;">
-                    <div style="width:38px;height:38px;background:var(--blue);border-radius:2px;
-                                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i class="bi bi-envelope-fill" style="color:#fff;font-size:1rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.2rem;">{% trans "Email" %}</div>
-                        <a href="mailto:lrc@najah.edu" style="font-size:.9rem;color:var(--text-muted);display:inline;">lrc@najah.edu</a>
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:1rem;align-items:flex-start;">
-                    <div style="width:38px;height:38px;background:var(--blue);border-radius:2px;
-                                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i class="bi bi-telephone-fill" style="color:#fff;font-size:1rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.2rem;">{% trans "Phone" %}</div>
-                        <p style="font-size:.9rem;color:var(--text-muted);margin:0;">+970 9 234 5113</p>
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:1rem;align-items:flex-start;">
-                    <div style="width:38px;height:38px;background:var(--blue);border-radius:2px;
-                                display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i class="bi bi-clock-fill" style="color:#fff;font-size:1rem;"></i>
-                    </div>
-                    <div>
-                        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);margin-bottom:.2rem;">{% trans "Office Hours" %}</div>
-                        <p style="font-size:.9rem;color:var(--text-muted);line-height:1.7;margin:0;">
-                            {% trans "Sunday – Thursday" %}<br>8:00 – 16:00
-                        </p>
-                    </div>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label class="contact-label">{% trans "Full Name" %} *</label>
+                                <input type="text" name="name" required class="contact-input"
+                                       placeholder="{% trans 'Enter your name' %}">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="contact-label">{% trans "Email Address" %} *</label>
+                                <input type="email" name="email" required class="contact-input"
+                                       placeholder="{% trans 'Enter your email' %}">
+                            </div>
+                            <div class="col-12">
+                                <label class="contact-label">{% trans "Subject" %}</label>
+                                <input type="text" name="subject" class="contact-input"
+                                       placeholder="{% trans 'What is this about?' %}">
+                            </div>
+                            <div class="col-12">
+                                <label class="contact-label">{% trans "Message" %} *</label>
+                                <textarea name="message" rows="5" required class="contact-input"
+                                          style="resize:vertical;"
+                                          placeholder="{% trans 'Write your message here...' %}"></textarea>
+                            </div>
+                            <div class="col-12" style="margin-top:.5rem;">
+                                <button type="submit" class="contact-submit">
+                                    <i class="bi bi-send-fill" style="margin-inline-end:.5rem;"></i>
+                                    {% trans "Send Message" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <!-- Leaflet map — An-Najah National University -->
-            <div id="lrc-map"
-                 style="height:220px;border:1px solid var(--border);border-top:3px solid var(--blue);">
-            </div>
+            <!-- Info side -->
+            <div class="col-lg-5 reveal-right">
 
-            <!-- Social -->
-            <div style="margin-top:1.5rem;">
-                <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:.75rem;">
-                    {% trans "Follow Our Journey" %}
-                </p>
-                <div class="d-flex gap-2">
-                    <a href="#" style="display:inline-flex;align-items:center;justify-content:center;
-                                      width:38px;height:38px;background:var(--blue);color:#fff;border-radius:2px;font-size:1rem;">
-                        <i class="bi bi-facebook"></i>
-                    </a>
-                    <a href="#" style="display:inline-flex;align-items:center;justify-content:center;
-                                      width:38px;height:38px;background:var(--blue);color:#fff;border-radius:2px;font-size:1rem;">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                    <a href="#" style="display:inline-flex;align-items:center;justify-content:center;
-                                      width:38px;height:38px;background:var(--blue);color:#fff;border-radius:2px;font-size:1rem;">
-                        <i class="bi bi-youtube"></i>
-                    </a>
-                    <a href="#" style="display:inline-flex;align-items:center;justify-content:center;
-                                      width:38px;height:38px;background:var(--blue);color:#fff;border-radius:2px;font-size:1rem;">
-                        <i class="bi bi-linkedin"></i>
-                    </a>
+                <!-- Info cards -->
+                <div style="display:flex;flex-direction:column;gap:.85rem;margin-bottom:1.5rem;" class="stagger">
+                    <div class="contact-info-card reveal">
+                        <div class="contact-info-icon" style="background:linear-gradient(135deg,#1a3a8f,#2563eb);">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem;">{% trans "Address" %}</div>
+                            <p style="font-size:.85rem;color:var(--text-muted);line-height:1.7;margin:0;">
+                                {% trans "Language Resource Center" %}<br>
+                                {% trans "An-Najah National University" %}<br>
+                                {% trans "Nablus, West Bank, Palestine" %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-card reveal">
+                        <div class="contact-info-icon" style="background:linear-gradient(135deg,var(--orange),#f59e0b);">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem;">{% trans "Email" %}</div>
+                            <a href="mailto:lrc@najah.edu" style="font-size:.88rem;color:var(--blue);display:inline;">lrc@najah.edu</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-card reveal">
+                        <div class="contact-info-icon" style="background:linear-gradient(135deg,#059669,#10b981);">
+                            <i class="bi bi-telephone-fill"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem;">{% trans "Phone" %}</div>
+                            <p style="font-size:.88rem;color:var(--text-muted);margin:0;">+970 9 234 5113</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-card reveal">
+                        <div class="contact-info-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;font-size:.85rem;color:var(--text);margin-bottom:.2rem;">{% trans "Office Hours" %}</div>
+                            <p style="font-size:.88rem;color:var(--text-muted);line-height:1.7;margin:0;">
+                                {% trans "Sunday – Thursday" %}<br>8:00 – 16:00
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
+                <!-- Map -->
+                <div id="lrc-map" class="reveal" style="height:200px;margin-bottom:1.25rem;"></div>
+
+                <!-- Social -->
+                <div class="reveal" style="text-align:center;">
+                    <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+                              color:var(--text-muted);margin-bottom:.65rem;">
+                        {% trans "Follow Our Journey" %}
+                    </p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="#" class="contact-social-btn" style="background:linear-gradient(135deg,#1877f2,#0d65d9);">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="contact-social-btn" style="background:linear-gradient(135deg,#e4405f,#c13584);">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="contact-social-btn" style="background:linear-gradient(135deg,#ff0000,#cc0000);">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                        <a href="#" class="contact-social-btn" style="background:linear-gradient(135deg,#0077b5,#005582);">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 {% endblock %}
 
@@ -182,7 +361,7 @@
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
     var bluePin = L.divIcon({

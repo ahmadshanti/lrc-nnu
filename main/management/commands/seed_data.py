@@ -411,24 +411,28 @@ class Command(BaseCommand):
                 'slug': 'services',
                 'nav_order': 2,
                 'content_ar': (
-                    'يقدّم مركز الموارد اللغوية مجموعة متنوعة من الخدمات اللغوية والأكاديمية، منها:\n\n'
-                    '- دورات اللغة الإنجليزية بمستوياتها المختلفة (مبتدئ، متوسط، متقدم)\n'
-                    '- دورات الفرنسية والألمانية والإسبانية\n'
-                    '- التحضير لاختبارات اللغة الدولية (IELTS, TOEFL, DELF, Goethe)\n'
-                    '- تدريب على مهارات الخطابة والتقديم\n'
-                    '- ورشات الكتابة الأكاديمية\n'
-                    '- برامج الترجمة والتعريب\n'
-                    '- برامج التبادل الثقافي والفعاليات الدولية'
+                    '<p>يقدّم مركز الموارد اللغوية مجموعة متنوعة من الخدمات اللغوية والأكاديمية:</p>'
+                    '<ul>'
+                    '<li>دورات اللغة الإنجليزية بمستوياتها المختلفة (مبتدئ، متوسط، متقدم)</li>'
+                    '<li>دورات الفرنسية والألمانية والإسبانية</li>'
+                    '<li>التحضير لاختبارات اللغة الدولية (IELTS, TOEFL, DELF, Goethe)</li>'
+                    '<li>تدريب على مهارات الخطابة والتقديم</li>'
+                    '<li>ورشات الكتابة الأكاديمية</li>'
+                    '<li>برامج الترجمة والتعريب</li>'
+                    '<li>برامج التبادل الثقافي والفعاليات الدولية</li>'
+                    '</ul>'
                 ),
                 'content_en': (
-                    'The Language Resource Center offers a diverse range of linguistic and academic services, including:\n\n'
-                    '- English language courses at all levels (beginner, intermediate, advanced)\n'
-                    '- French, German, and Spanish courses\n'
-                    '- International language test preparation (IELTS, TOEFL, DELF, Goethe)\n'
-                    '- Public speaking and presentation skills training\n'
-                    '- Academic writing workshops\n'
-                    '- Translation and localization programs\n'
-                    '- Cultural exchange programs and international events'
+                    '<p>The Language Resource Center offers a diverse range of linguistic and academic services:</p>'
+                    '<ul>'
+                    '<li>English language courses at all levels (beginner, intermediate, advanced)</li>'
+                    '<li>French, German, and Spanish courses</li>'
+                    '<li>International language test preparation (IELTS, TOEFL, DELF, Goethe)</li>'
+                    '<li>Public speaking and presentation skills training</li>'
+                    '<li>Academic writing workshops</li>'
+                    '<li>Translation and localization programs</li>'
+                    '<li>Cultural exchange programs and international events</li>'
+                    '</ul>'
                 ),
             },
         ]

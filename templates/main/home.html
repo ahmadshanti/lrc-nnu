@@ -86,7 +86,7 @@
                                   color:rgba(255,255,255,.5);margin-bottom:.85rem;">
                             {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
                         </p>
-                        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
+                        <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
                                    font-size:clamp(2.1rem,5vw,3.75rem);font-weight:800;color:#fff;
                                    line-height:1.16;margin-bottom:1.35rem;">
                             {{ slide.title }}
@@ -138,7 +138,7 @@
                       color:rgba(255,255,255,.5);margin-bottom:.85rem;">
                 {% trans "Language Resource Center" %} &ensp;·&ensp; {% trans "An-Najah National University" %}
             </p>
-            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
+            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
                        font-size:clamp(2.1rem,5vw,3.75rem);font-weight:800;color:#fff;
                        line-height:1.16;margin-bottom:1.35rem;">
                 {% trans "Unlocking Global Communication" %}
@@ -159,7 +159,7 @@
 {% with s=site_settings %}
 <div style="background:var(--blue);padding:1.25rem 0;">
     <div class="container-lg">
-        <div class="row g-0 text-center">
+        <div class="row g-0 text-center stagger">
             <div class="col-6 col-md-3" style="padding:.6rem 0;">
                 <div class="stat-figure">{{ s.stat1_number }}</div>
                 <div class="stat-caption">{{ s.stat1_label }}</div>
@@ -184,41 +184,68 @@
 <!-- ══ LATEST NEWS + ANNOUNCEMENTS ════════════════════════════════════════ -->
 <section style="padding:3.5rem 0;">
     <div class="container-lg">
-        <div class="row g-5">
+        <div class="row g-4">
 
-            <div class="col-lg-8">
+            <!-- ── News ──────────────────────────────────────────── -->
+            <div class="col-lg-8 reveal-left">
                 <div class="section-header">
                     <h2>{% trans "Latest News" %}</h2>
                     <div class="line"></div>
                     <a href="{% url 'main:news_list' %}" class="view-all">{% trans "All News" %} →</a>
                 </div>
                 {% if latest_news %}
-                <div class="row g-4">
-                    {% for item in latest_news|slice:":3" %}
-                    <div class="col-sm-6 col-lg-4">
-                        <div class="h-100" style="border:1px solid var(--border);">
-                            <a href="{% url 'main:news_detail' item.pk %}"
-                               style="display:block;overflow:hidden;height:155px;">
+                <div class="row g-3">
+                    <!-- Featured news (big card) -->
+                    {% with item=latest_news.0 %}
+                    <div class="col-12">
+                        <a href="{% url 'main:news_detail' item.pk %}" style="text-decoration:none;display:flex;gap:0;border:1px solid var(--border);overflow:hidden;">
+                            <div style="flex:0 0 45%;overflow:hidden;">
                                 {% if item.image %}
                                 <img src="{{ item.image.url }}" alt="{{ item.title }}"
-                                     style="width:100%;height:155px;object-fit:cover;transition:transform .35s;"
-                                     onmouseover="this.style.transform='scale(1.05)'"
-                                     onmouseout="this.style.transform='scale(1)'">
+                                     style="width:100%;height:100%;min-height:220px;object-fit:cover;transition:transform .4s;">
                                 {% else %}
-                                <div style="width:100%;height:155px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
-                                    <i class="bi bi-image" style="font-size:2rem;color:var(--border);"></i>
+                                <div style="width:100%;height:220px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
+                                    <i class="bi bi-image" style="font-size:2.5rem;color:var(--border);"></i>
                                 </div>
                                 {% endif %}
-                            </a>
-                            <div style="padding:.9rem;">
+                            </div>
+                            <div style="flex:1;padding:1.4rem 1.5rem;display:flex;flex-direction:column;justify-content:center;">
                                 <div class="article-meta">
                                     <span class="cat">{% trans "News" %}</span> · {{ item.date|date:"d M Y" }}
                                 </div>
+                                <div class="article-title" style="font-size:1.2rem;margin-bottom:.6rem;">{{ item.title }}</div>
+                                <p style="font-size:.88rem;color:var(--text-muted);line-height:1.7;margin:0 0 .8rem;">
+                                    {{ item.content|truncatechars:130 }}
+                                </p>
+                                <span class="article-readmore">{% trans "Read More" %} →</span>
+                            </div>
+                        </a>
+                    </div>
+                    {% endwith %}
+
+                    <!-- Smaller news cards -->
+                    {% for item in latest_news|slice:"1:4" %}
+                    <div class="col-sm-4">
+                        <div class="h-100" style="border:1px solid var(--border);">
+                            <a href="{% url 'main:news_detail' item.pk %}"
+                               style="display:block;overflow:hidden;height:140px;">
+                                {% if item.image %}
+                                <img src="{{ item.image.url }}" alt="{{ item.title }}"
+                                     style="width:100%;height:140px;object-fit:cover;transition:transform .35s;"
+                                     onmouseover="this.style.transform='scale(1.05)'"
+                                     onmouseout="this.style.transform='scale(1)'">
+                                {% else %}
+                                <div style="width:100%;height:140px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
+                                    <i class="bi bi-image" style="font-size:1.5rem;color:var(--border);"></i>
+                                </div>
+                                {% endif %}
+                            </a>
+                            <div style="padding:.75rem .85rem;">
+                                <div class="article-meta" style="font-size:.68rem;">
+                                    {{ item.date|date:"d M Y" }}
+                                </div>
                                 <a href="{% url 'main:news_detail' item.pk %}" style="text-decoration:none;">
-                                    <div class="article-title" style="font-size:.95rem;">{{ item.title|truncatechars:65 }}</div>
-                                </a>
-                                <a href="{% url 'main:news_detail' item.pk %}" class="article-readmore" style="margin-top:.35rem;display:inline-block;">
-                                    {% trans "Read More" %} →
+                                    <div class="article-title" style="font-size:.88rem;">{{ item.title|truncatechars:60 }}</div>
                                 </a>
                             </div>
                         </div>
@@ -230,7 +257,8 @@
                 {% endif %}
             </div>
 
-            <div class="col-lg-4">
+            <!-- ── Announcements sidebar ─────────────────────────── -->
+            <div class="col-lg-4 reveal-right">
                 <div class="section-header">
                     <h2>{% trans "Announcements" %}</h2>
                     <div class="line"></div>
@@ -244,17 +272,22 @@
                 <p style="color:var(--text-muted);font-size:.9rem;">{% trans "No announcements at this time." %}</p>
                 {% endfor %}
 
-                <div style="background:var(--blue);padding:1.5rem;margin-top:1.5rem;">
-                    <h3 style="font-size:1.05rem;font-weight:700;color:#fff;font-family:inherit;margin-bottom:.45rem;">
+                <div style="background:var(--blue-dark);padding:1.5rem;margin-top:1.25rem;position:relative;overflow:hidden;">
+                    <div style="position:absolute;top:-15px;right:-15px;opacity:.08;font-size:6rem;color:#fff;">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+                    <h3 style="font-size:1rem;font-weight:700;color:#fff;font-family:inherit;margin-bottom:.4rem;">
                         {% trans "Need Help?" %}
                     </h3>
-                    <p style="font-size:.84rem;color:rgba(255,255,255,.72);line-height:1.7;margin-bottom:.9rem;">
+                    <p style="font-size:.82rem;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:.85rem;">
                         {% trans "Our team is here to guide you through our programs and services." %}
                     </p>
                     <a href="{% url 'main:contact' %}"
-                       style="display:inline-block;background:#fff;color:var(--blue);
-                              padding:.45rem 1.2rem;font-size:.8rem;font-weight:700;
-                              letter-spacing:.05em;text-decoration:none;">
+                       style="display:inline-block;background:var(--orange);color:#fff;
+                              padding:.5rem 1.3rem;font-size:.78rem;font-weight:700;
+                              letter-spacing:.05em;text-decoration:none;transition:opacity .15s;"
+                       onmouseover="this.style.opacity='.85'"
+                       onmouseout="this.style.opacity='1'">
                         {% trans "Contact Us" %} →
                     </a>
                 </div>
@@ -267,14 +300,14 @@
 <!-- ══ LANGUAGES WE TEACH ═════════════════════════════════════════════════ -->
 <section style="padding:3.5rem 0;background:var(--bg-alt);border-top:1px solid var(--border);">
     <div class="container-lg">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2>{% trans "Languages We Teach" %}</h2>
             <div class="line"></div>
             <a href="{% url 'main:contact' %}" class="view-all">{% trans "Apply Now" %} →</a>
         </div>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <a class="prog-card" href="{% url 'main:contact' %}">
+        <div class="row g-3 stagger">
+            <div class="col-md-4 reveal-scale">
+                <a class="prog-card hover-lift" href="{% url 'main:contact' %}">
                     {% if hero_news and hero_news.0.image %}<img src="{{ hero_news.0.image.url }}" alt="">{% endif %}
                     <div class="prog-card-overlay">
                         <div class="prog-card-eye">{% trans "Language Program" %}</div>
@@ -283,8 +316,8 @@
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
-                <a class="prog-card" href="{% url 'main:contact' %}">
+            <div class="col-md-4 reveal-scale">
+                <a class="prog-card hover-lift" href="{% url 'main:contact' %}">
                     {% if hero_news and hero_news.1.image %}<img src="{{ hero_news.1.image.url }}" alt="">{% endif %}
                     <div class="prog-card-overlay">
                         <div class="prog-card-eye">{% trans "Language Program" %}</div>
@@ -293,8 +326,8 @@
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
-                <a class="prog-card" href="{% url 'main:contact' %}">
+            <div class="col-md-4 reveal-scale">
+                <a class="prog-card hover-lift" href="{% url 'main:contact' %}">
                     {% if hero_news and hero_news.2.image %}<img src="{{ hero_news.2.image.url }}" alt="">{% endif %}
                     <div class="prog-card-overlay">
                         <div class="prog-card-eye">{% trans "Language Program" %}</div>
@@ -311,15 +344,15 @@
 {% if stories %}
 <section style="padding:3.5rem 0;border-top:1px solid var(--border);">
     <div class="container-lg">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2>{% trans "Student Voices" %}</h2>
             <div class="line"></div>
             <a href="{% url 'main:stories' %}" class="view-all">{% trans "All Stories" %} →</a>
         </div>
-        <div class="row g-3">
+        <div class="row g-3 stagger">
             {% for story in stories %}
-            <div class="col-md-4">
-                <div class="testi-card">
+            <div class="col-md-4 reveal">
+                <div class="testi-card hover-lift">
                     <div class="d-flex align-items-center gap-3">
                         {% if story.image %}
                         <img src="{{ story.image.url }}" class="story-avatar" alt="{{ story.member_name }}">
@@ -341,20 +374,58 @@
 {% endif %}
 
 <!-- ══ JOIN CTA ════════════════════════════════════════════════════════════ -->
-<section style="background:var(--blue-dark);padding:3.5rem 0;text-align:center;">
-    <div class="container-lg">
-        <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Playfair Display'{% endif %},sans-serif;
-                   color:#fff;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;margin-bottom:.75rem;">
+<section style="background:linear-gradient(135deg,#0a1940 0%,#1a3a8f 50%,#2563eb 100%);
+               padding:5.5rem 0;text-align:center;position:relative;overflow:hidden;">
+    <!-- Animated floating icons -->
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:8%;left:6%;font-size:5rem;color:rgba(255,255,255,.07);animation:float1 6s ease-in-out infinite;">
+            <i class="bi bi-translate"></i>
+        </div>
+        <div style="position:absolute;bottom:10%;right:8%;font-size:6rem;color:rgba(255,255,255,.06);animation:float2 7s ease-in-out infinite;">
+            <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div style="position:absolute;top:35%;left:80%;font-size:3.5rem;color:rgba(255,255,255,.05);animation:float3 5s ease-in-out infinite;">
+            <i class="bi bi-chat-quote-fill"></i>
+        </div>
+        <div style="position:absolute;top:15%;right:35%;font-size:4rem;color:rgba(255,255,255,.04);animation:float4 8s ease-in-out infinite;">
+            <i class="bi bi-globe2"></i>
+        </div>
+        <div style="position:absolute;bottom:15%;left:25%;font-size:3rem;color:rgba(255,255,255,.05);animation:float1 9s ease-in-out infinite 1s;">
+            <i class="bi bi-book-half"></i>
+        </div>
+        <!-- Glowing orbs -->
+        <div style="position:absolute;width:300px;height:300px;border-radius:50%;
+                    background:radial-gradient(circle,rgba(217,119,6,.15) 0%,transparent 70%);
+                    top:-80px;right:-60px;"></div>
+        <div style="position:absolute;width:200px;height:200px;border-radius:50%;
+                    background:radial-gradient(circle,rgba(37,99,235,.2) 0%,transparent 70%);
+                    bottom:-60px;left:-40px;"></div>
+    </div>
+    <!-- Content -->
+    <div class="container-lg reveal" style="position:relative;z-index:2;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;
+                    width:72px;height:72px;border-radius:50%;
+                    background:linear-gradient(135deg,var(--orange),#f59e0b);
+                    margin-bottom:1.6rem;animation:pulse 2.5s ease-in-out infinite;
+                    box-shadow:0 8px 30px rgba(217,119,6,.4);">
+            <i class="bi bi-stars" style="font-size:1.8rem;color:#fff;"></i>
+        </div>
+        <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   color:#fff;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;
+                   margin-bottom:.85rem;letter-spacing:-.02em;">
             {% trans "Join Our Language Community" %}
         </h2>
-        <p style="color:rgba(255,255,255,.65);font-size:1rem;max-width:520px;margin:0 auto 1.75rem;line-height:1.85;">
+        <p style="color:rgba(255,255,255,.55);font-size:1.05rem;max-width:500px;
+                  margin:0 auto 2.2rem;line-height:1.9;">
             {% trans "Whether you are a student looking to master a new language or a professional seeking excellence, our team is here to help." %}
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{% url 'main:contact' %}" class="btn-lrc-primary" style="background:var(--orange);border-color:var(--orange);">
+            <a href="{% url 'main:contact' %}" class="cta-glow-btn">
+                <i class="bi bi-rocket-takeoff-fill" style="margin-inline-end:.45rem;"></i>
                 {% trans "Explore Programs" %}
             </a>
-            <a href="{% url 'main:team' %}" class="btn-lrc-outline">
+            <a href="{% url 'main:team' %}" class="cta-outline-btn">
+                <i class="bi bi-people-fill" style="margin-inline-end:.4rem;"></i>
                 {% trans "Meet Our Team" %}
             </a>
         </div>

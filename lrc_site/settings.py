@@ -115,10 +115,10 @@ EMAIL_BACKEND   = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST      = 'smtp.gmail.com'
 EMAIL_PORT      = 587
 EMAIL_USE_TLS   = True
-EMAIL_HOST_USER     = 'ahmad9shanti@gmail.com'
-EMAIL_HOST_PASSWORD = 'yxjo ewmk xoxc pzmi'
-DEFAULT_FROM_EMAIL  = 'LRC Website <ahmad9shanti@gmail.com>'
-CONTACT_EMAIL       = 'ahmad9shanti@gmail.com'
+EMAIL_HOST_USER     = 'lrc.noreply@najah.edu'
+EMAIL_HOST_PASSWORD = 'swva pdsj byji wdwx'
+DEFAULT_FROM_EMAIL  = 'LRC Website <lrc.noreply@najah.edu>'
+CONTACT_EMAIL       = 'lrc.noreply@najah.edu'
 
 # ─── Misc ────────────────────────────────────────────────────────────────────
 

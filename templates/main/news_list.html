@@ -3,52 +3,250 @@
 
 {% block title %}{% trans "News" %} — LRC{% endblock %}
 
+{% block extra_css %}
+<style>
+.news-hero {
+    background: linear-gradient(135deg, #0a1940 0%, var(--blue) 100%);
+    padding: 3.5rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.news-hero::before {
+    content: '';
+    position: absolute;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,119,6,.1) 0%, transparent 70%);
+    top: -120px;
+    {% if LANGUAGE_BIDI %}left: -80px;{% else %}right: -80px;{% endif %}
+}
+
+/* Featured card */
+.news-featured {
+    display: flex;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    text-decoration: none;
+    transition: transform .4s ease, box-shadow .4s ease;
+}
+.news-featured:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0,0,0,.12);
+}
+.news-featured-img {
+    flex: 0 0 50%;
+    overflow: hidden;
+}
+.news-featured-img img {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+.news-featured:hover .news-featured-img img {
+    transform: scale(1.05);
+}
+@media (max-width: 768px) {
+    .news-featured { flex-direction: column; }
+    .news-featured-img { flex: none; }
+    .news-featured-img img { min-height: 200px; }
+}
+
+/* Regular card */
+.news-card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 14px rgba(0,0,0,.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform .4s ease, box-shadow .4s ease;
+    position: relative;
+}
+.news-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--orange));
+    transform: scaleX(0);
+    transition: transform .35s ease;
+    z-index: 2;
+    border-radius: 14px 14px 0 0;
+}
+.news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.1);
+}
+.news-card:hover::before {
+    transform: scaleX(1);
+}
+.news-card-img {
+    overflow: hidden;
+    height: 200px;
+    flex-shrink: 0;
+}
+.news-card-img img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+.news-card:hover .news-card-img img {
+    transform: scale(1.08);
+}
+.news-card-body {
+    padding: 1.25rem 1.3rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.news-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: .5rem;
+}
+.news-date-badge i {
+    color: var(--orange);
+}
+.news-card-title {
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: .5rem;
+    transition: color .2s;
+}
+.news-card:hover .news-card-title {
+    color: var(--blue);
+}
+.news-readmore {
+    margin-top: auto;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--blue);
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    transition: gap .3s ease;
+}
+.news-card:hover .news-readmore {
+    gap: .65rem;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
-<div style="background:var(--bg-alt);border-bottom:1px solid var(--border);padding:2.5rem 0 2rem;">
-    <div class="container-lg">
-        <p style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);margin-bottom:.5rem;">
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<div class="news-hero">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:15%;right:12%;font-size:4rem;color:rgba(255,255,255,.04);animation:float1 7s ease-in-out infinite;">
+            <i class="bi bi-newspaper"></i>
+        </div>
+        <div style="position:absolute;bottom:20%;left:8%;font-size:3rem;color:rgba(255,255,255,.05);animation:float2 6s ease-in-out infinite;">
+            <i class="bi bi-megaphone-fill"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <p class="reveal" style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.17em;
+                  color:rgba(255,255,255,.4);margin-bottom:.5rem;">
             {% trans "Language Resource Center" %}
         </p>
-        <h1 style="font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;margin:0;">{% trans "News" %}</h1>
+        <h1 class="reveal" style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;margin-bottom:.7rem;">
+            {% trans "News" %}
+        </h1>
+        <p class="reveal" style="font-size:.95rem;color:rgba(255,255,255,.5);max-width:480px;line-height:1.85;margin:0;">
+            {% trans "Stay updated with the latest news, events, and achievements from the Language Resource Center." %}
+        </p>
     </div>
 </div>
 
-<div class="container-lg py-4 pb-5">
-    {% if news %}
-    <div class="row g-4">
-        {% for item in news %}
-        <div class="col-md-6 col-lg-4">
-            <div style="border:1px solid var(--border);height:100%;display:flex;flex-direction:column;">
-                <a href="{% url 'main:news_detail' item.pk %}" style="display:block;overflow:hidden;height:190px;flex-shrink:0;">
-                    {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.title }}"
-                         style="width:100%;height:190px;object-fit:cover;transition:transform .35s;"
-                         onmouseover="this.style.transform='scale(1.05)'"
-                         onmouseout="this.style.transform='scale(1)'">
-                    {% else %}
-                    <div style="width:100%;height:190px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
-                        <i class="bi bi-image" style="font-size:2.5rem;color:var(--border);"></i>
-                    </div>
-                    {% endif %}
-                </a>
-                <div style="padding:1.1rem;flex:1;display:flex;flex-direction:column;">
-                    <div class="article-meta">
-                        <span class="cat">{% trans "News" %}</span> · {{ item.date|date:"d M Y" }}
-                    </div>
-                    <a href="{% url 'main:news_detail' item.pk %}" style="text-decoration:none;flex:1;">
-                        <div class="article-title">{{ item.title|truncatechars:80 }}</div>
-                    </a>
-                    <p class="article-excerpt">{{ item.content|truncatechars:110 }}</p>
-                    <a href="{% url 'main:news_detail' item.pk %}" class="article-readmore">{% trans "Read More" %} →</a>
+<!-- ── News grid ──────────────────────────────────────────────────────── -->
+<section style="padding:3rem 0 4rem;background:var(--bg-alt);">
+    <div class="container-lg">
+        {% if news %}
+
+        <!-- Featured (first news) -->
+        {% with item=news.0 %}
+        <a href="{% url 'main:news_detail' item.pk %}" class="news-featured reveal" style="margin-bottom:2.5rem;">
+            <div class="news-featured-img">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                {% else %}
+                <div style="width:100%;min-height:300px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-image" style="font-size:3rem;color:var(--border);"></i>
                 </div>
+                {% endif %}
             </div>
+            <div style="padding:2rem 2.2rem;flex:1;display:flex;flex-direction:column;justify-content:center;">
+                <div style="display:inline-block;background:rgba(26,58,143,.1);color:var(--blue);
+                            padding:.25rem .85rem;border-radius:20px;font-size:.72rem;font-weight:700;
+                            letter-spacing:.05em;margin-bottom:.8rem;width:fit-content;">
+                    {% trans "Featured" %}
+                </div>
+                <div class="news-date-badge">
+                    <i class="bi bi-calendar3"></i> {{ item.date|date:"d M Y" }}
+                </div>
+                <div style="font-weight:800;font-size:1.35rem;color:var(--text);line-height:1.4;margin-bottom:.75rem;">
+                    {{ item.title }}
+                </div>
+                <p style="font-size:.92rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;">
+                    {{ item.content|truncatechars:160 }}
+                </p>
+                <span class="news-readmore">
+                    {% trans "Read More" %} <i class="bi bi-arrow-right"></i>
+                </span>
+            </div>
+        </a>
+        {% endwith %}
+
+        <!-- Rest of news -->
+        <div class="row g-4 stagger">
+            {% for item in news|slice:"1:" %}
+            <div class="col-md-6 col-lg-4 reveal">
+                <a href="{% url 'main:news_detail' item.pk %}" style="text-decoration:none;display:block;">
+                    <div class="news-card">
+                        <div class="news-card-img">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                            {% else %}
+                            <div style="width:100%;height:200px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;">
+                                <i class="bi bi-image" style="font-size:2rem;color:var(--border);"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="news-card-body">
+                            <div class="news-date-badge">
+                                <i class="bi bi-calendar3"></i> {{ item.date|date:"d M Y" }}
+                            </div>
+                            <div class="news-card-title">{{ item.title|truncatechars:75 }}</div>
+                            <p style="font-size:.85rem;color:var(--text-muted);line-height:1.75;margin:0 0 .8rem;">
+                                {{ item.content|truncatechars:100 }}
+                            </p>
+                            <span class="news-readmore">
+                                {% trans "Read More" %} <i class="bi bi-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
+        {% else %}
+        <p style="color:var(--text-muted);padding:3rem 0;">{% trans "No news published yet." %}</p>
+        {% endif %}
     </div>
-    {% else %}
-    <p style="color:var(--text-muted);padding:3rem 0;">{% trans "No news published yet." %}</p>
-    {% endif %}
-</div>
+</section>
 
 {% endblock %}
