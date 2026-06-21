@@ -124,6 +124,58 @@ TRANSLATIONS = {
     'No stories yet.':                      'لا توجد قصص بعد.',
     'Language Resource Center — An-Najah National University':
         'مركز الموارد اللغوية — جامعة النجاح الوطنية',
+
+    # ── Events ─────────────────────────────────────────────────────────
+    'Events':                               'الفعاليات',
+    'Event':                                'فعالية',
+    'Annual Event':                         'فعالية سنوية',
+    'View Details':                         'عرض التفاصيل',
+    'No events yet.':                       'لا توجد فعاليات بعد.',
+    'Discover our events that bring cultures together and empower students through language and dialogue.':
+        'اكتشف فعالياتنا التي تجمع الثقافات وتمكّن الطلبة من خلال اللغة والحوار.',
+    'About the Event':                      'عن الفعالية',
+    'Cultural Booths':                      'الأجنحة الثقافية',
+    'Interactive booths representing cultures and languages from around the world.':
+        'أجنحة تفاعلية تمثل ثقافات ولغات من حول العالم.',
+    'Live Performances':                    'عروض حية',
+    'Student-led cultural performances and educational engagement activities.':
+        'عروض ثقافية يقودها الطلبة وأنشطة تعليمية تفاعلية.',
+    'Language Passport':                    'جواز السفر اللغوي',
+    'A gamified exploration experience where visitors collect stamps from each cultural booth.':
+        'تجربة استكشافية تفاعلية يجمع فيها الزوار طوابع من كل جناح ثقافي.',
+    'Youth Empowerment':                    'تمكين الشباب',
+    'Building 21st-century skills: intercultural communication, openness, and global awareness.':
+        'بناء مهارات القرن الحادي والعشرين: التواصل بين الثقافات والانفتاح والوعي العالمي.',
+    'What our participants say':            'ماذا يقول المشاركون',
+    'Our Sponsors':                         'رعاتنا',
+    'We thank our partners for making Language Open Day possible.':
+        'نشكر شركاءنا الذين يجعلون يوم اللغات المفتوح ممكناً.',
+    'Want to Participate?':                 'هل تريد المشاركة؟',
+    'Whether as a student, sponsor, or partner — join us in making the next event even bigger.':
+        'سواء كنت طالباً أو راعياً أو شريكاً — انضم إلينا لجعل الفعالية القادمة أكبر.',
+
+    # ── Contact form placeholders ──────────────────────────────────────
+    'Enter your name':                      'أدخل اسمك',
+    'Enter your email':                     'أدخل بريدك الإلكتروني',
+    'What is this about?':                  'ما هو الموضوع؟',
+    'Write your message here...':           'اكتب رسالتك هنا...',
+
+    # ── Pages ──────────────────────────────────────────────────────────
+    'Interested in our programs?':          'مهتم ببرامجنا؟',
+    'Contact us today to learn more about enrollment and available courses.':
+        'تواصل معنا اليوم لمعرفة المزيد عن التسجيل والدورات المتاحة.',
+    'Location':                             'الموقع',
+
+    # ── News list ──────────────────────────────────────────────────────
+    'Stay updated with the latest news, events, and achievements from the Language Resource Center.':
+        'تابع آخر الأخبار والفعاليات والإنجازات من مركز الموارد اللغوية.',
+
+    # ── Stories ────────────────────────────────────────────────────────
+    'Real stories from our students who transformed their lives through language learning.':
+        'قصص حقيقية من طلبتنا الذين غيّروا حياتهم من خلال تعلم اللغات.',
+    'Share Your Story':                     'شارك قصتك',
+    'Have a success story to share? We\'d love to hear how the LRC helped you achieve your goals.':
+        'لديك قصة نجاح؟ يسعدنا سماع كيف ساعدك المركز في تحقيق أهدافك.',
 }
 
 
