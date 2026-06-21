@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from ckeditor.widgets import CKEditorWidget
 
-from .models import Announcement, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
+from .models import Announcement, Event, EventImage, EventQuote, EventSponsor, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
 
 RICH_TEXT = {models.TextField: {'widget': CKEditorWidget}}
 
@@ -136,4 +136,44 @@ class PageAdmin(admin.ModelAdmin):
         'show_in_nav', 'nav_order',
         'is_published',
     )
+    formfield_overrides = RICH_TEXT
+
+
+class EventImageInline(admin.TabularInline):
+    model = EventImage
+    extra = 1
+
+
+class EventQuoteInline(admin.TabularInline):
+    model = EventQuote
+    extra = 1
+
+
+class EventSponsorInline(admin.TabularInline):
+    model = EventSponsor
+    extra = 1
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'date', 'is_published')
+    list_filter = ('is_published',)
+    list_editable = ('is_published',)
+    search_fields = ('title_en', 'title_ar')
+    prepopulated_fields = {'slug': ('title_en',)}
+    inlines = [EventImageInline, EventQuoteInline, EventSponsorInline]
+    fieldsets = [
+        ('Content', {'fields': [
+            ('title_ar', 'title_en'),
+            ('subtitle_ar', 'subtitle_en'),
+            'content_ar', 'content_en',
+        ]}),
+        ('Stats Bar', {'fields': [
+            ('stat1_number', 'stat1_label_ar', 'stat1_label_en'),
+            ('stat2_number', 'stat2_label_ar', 'stat2_label_en'),
+            ('stat3_number', 'stat3_label_ar', 'stat3_label_en'),
+            ('stat4_number', 'stat4_label_ar', 'stat4_label_en'),
+        ], 'classes': ['collapse']}),
+        ('Settings', {'fields': ['date', 'slug', 'is_published']}),
+    ]
     formfield_overrides = RICH_TEXT

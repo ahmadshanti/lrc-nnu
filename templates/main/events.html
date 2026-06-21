@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Events" %} — LRC{% endblock %}
+
+{% block extra_css %}
+<style>
+.events-hero {
+    background: linear-gradient(135deg, #0a1940 0%, var(--blue) 100%);
+    padding: 3.5rem 0 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.event-list-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,.04);
+    transition: transform .4s ease, box-shadow .4s ease;
+    display: flex;
+    text-decoration: none;
+}
+.event-list-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,.12);
+}
+.event-list-img {
+    flex: 0 0 40%;
+    overflow: hidden;
+    min-height: 260px;
+}
+.event-list-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+.event-list-card:hover .event-list-img img {
+    transform: scale(1.06);
+}
+.event-list-body {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+@media (max-width: 768px) {
+    .event-list-card { flex-direction: column; }
+    .event-list-img { flex: none; min-height: 200px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ────────────────────────────────────────────────────────────── -->
+<div class="events-hero">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:12%;right:10%;font-size:4rem;color:rgba(255,255,255,.04);animation:float1 7s ease-in-out infinite;">
+            <i class="bi bi-calendar-event-fill"></i>
+        </div>
+        <div style="position:absolute;bottom:18%;left:8%;font-size:3rem;color:rgba(255,255,255,.05);animation:float2 6s ease-in-out infinite;">
+            <i class="bi bi-globe2"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <p class="reveal" style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.17em;
+                  color:rgba(255,255,255,.4);margin-bottom:.5rem;">
+            {% trans "Language Resource Center" %}
+        </p>
+        <h1 class="reveal" style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;margin-bottom:.7rem;">
+            {% trans "Events" %}
+        </h1>
+        <p class="reveal" style="font-size:.95rem;color:rgba(255,255,255,.5);max-width:480px;line-height:1.85;margin:0;">
+            {% trans "Discover our events that bring cultures together and empower students through language and dialogue." %}
+        </p>
+    </div>
+</div>
+
+<!-- ── Events list ────────────────────────────────────────────────────── -->
+<section style="padding:3rem 0 4rem;background:var(--bg-alt);">
+    <div class="container-lg">
+        {% if events %}
+        <div class="row g-4 stagger">
+            {% for event in events %}
+            <div class="col-12 reveal">
+                <a href="{{ event.get_absolute_url }}" class="event-list-card">
+                    <div class="event-list-img">
+                        {% if event.images.first %}
+                        <img src="{{ event.images.first.image.url }}" alt="{{ event.title }}">
+                        {% else %}
+                        <div style="width:100%;height:100%;min-height:260px;background:linear-gradient(135deg,var(--blue-dark),var(--blue));
+                                    display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-calendar-event" style="font-size:3rem;color:rgba(255,255,255,.2);"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="event-list-body">
+                        {% if event.date %}
+                        <div style="display:inline-flex;align-items:center;gap:.4rem;
+                                    background:rgba(26,58,143,.08);color:var(--blue);
+                                    padding:.3rem .85rem;border-radius:20px;font-size:.74rem;
+                                    font-weight:700;width:fit-content;margin-bottom:.8rem;">
+                            <i class="bi bi-calendar3"></i> {{ event.date|date:"d M Y" }}
+                        </div>
+                        {% endif %}
+                        <div style="font-weight:800;font-size:1.4rem;color:var(--text);line-height:1.35;margin-bottom:.5rem;">
+                            {{ event.title }}
+                        </div>
+                        {% if event.subtitle %}
+                        <p style="font-size:.92rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;">
+                            {{ event.subtitle }}
+                        </p>
+                        {% endif %}
+                        <span style="font-size:.82rem;font-weight:700;color:var(--blue);display:inline-flex;align-items:center;gap:.35rem;">
+                            {% trans "View Details" %} <i class="bi bi-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted);padding:3rem 0;text-align:center;">{% trans "No events yet." %}</p>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

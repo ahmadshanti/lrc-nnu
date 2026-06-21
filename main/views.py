@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Announcement, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
+from .models import Announcement, Event, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
 
 
 def home(request):
@@ -69,6 +69,16 @@ def contact(request):
             messages.error(request, 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.')
         return redirect('main:contact')
     return render(request, 'main/contact.html', {})
+
+
+def events(request):
+    all_events = Event.objects.filter(is_published=True)
+    return render(request, 'main/events.html', {'events': all_events})
+
+
+def event_detail(request, slug):
+    event = get_object_or_404(Event, slug=slug, is_published=True)
+    return render(request, 'main/event_detail.html', {'event': event})
 
 
 def page_view(request, slug):

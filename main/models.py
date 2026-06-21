@@ -243,6 +243,108 @@ class SiteSetting(models.Model):
     def contact_address(self): return _pick(self.contact_address_ar, self.contact_address_en)
 
 
+class Event(models.Model):
+    title_ar = models.CharField('Title (AR)', max_length=200)
+    title_en = models.CharField('Title (EN)', max_length=200)
+    subtitle_ar = models.CharField('Subtitle (AR)', max_length=300, blank=True)
+    subtitle_en = models.CharField('Subtitle (EN)', max_length=300, blank=True)
+    content_ar = models.TextField('Content (AR)')
+    content_en = models.TextField('Content (EN)')
+    date = models.DateField('Event Date', blank=True, null=True)
+    slug = models.SlugField('URL Slug', unique=True, max_length=100)
+    is_published = models.BooleanField('Published', default=True)
+    stat1_number = models.CharField('Stat 1 Number', max_length=20, blank=True)
+    stat1_label_ar = models.CharField('Stat 1 Label (AR)', max_length=100, blank=True)
+    stat1_label_en = models.CharField('Stat 1 Label (EN)', max_length=100, blank=True)
+    stat2_number = models.CharField('Stat 2 Number', max_length=20, blank=True)
+    stat2_label_ar = models.CharField('Stat 2 Label (AR)', max_length=100, blank=True)
+    stat2_label_en = models.CharField('Stat 2 Label (EN)', max_length=100, blank=True)
+    stat3_number = models.CharField('Stat 3 Number', max_length=20, blank=True)
+    stat3_label_ar = models.CharField('Stat 3 Label (AR)', max_length=100, blank=True)
+    stat3_label_en = models.CharField('Stat 3 Label (EN)', max_length=100, blank=True)
+    stat4_number = models.CharField('Stat 4 Number', max_length=20, blank=True)
+    stat4_label_ar = models.CharField('Stat 4 Label (AR)', max_length=100, blank=True)
+    stat4_label_en = models.CharField('Stat 4 Label (EN)', max_length=100, blank=True)
+
+    class Meta:
+        verbose_name = 'Event'
+        verbose_name_plural = 'Events'
+        ordering = ['-date']
+
+    def __str__(self):
+        return self.title_en or self.title_ar
+
+    def get_absolute_url(self):
+        return reverse('main:event_detail', kwargs={'slug': self.slug})
+
+    @property
+    def title(self): return _pick(self.title_ar, self.title_en)
+    @property
+    def subtitle(self): return _pick(self.subtitle_ar, self.subtitle_en)
+    @property
+    def content(self): return _pick(self.content_ar, self.content_en)
+    @property
+    def stat1_label(self): return _pick(self.stat1_label_ar, self.stat1_label_en)
+    @property
+    def stat2_label(self): return _pick(self.stat2_label_ar, self.stat2_label_en)
+    @property
+    def stat3_label(self): return _pick(self.stat3_label_ar, self.stat3_label_en)
+    @property
+    def stat4_label(self): return _pick(self.stat4_label_ar, self.stat4_label_en)
+    @property
+    def has_stats(self): return bool(self.stat1_number)
+
+
+class EventQuote(models.Model):
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='quotes')
+    text_ar = models.TextField('Quote (AR)')
+    text_en = models.TextField('Quote (EN)')
+    author = models.CharField('Author Name', max_length=200, blank=True)
+    order = models.PositiveIntegerField('Order', default=0)
+
+    class Meta:
+        verbose_name = 'Event Quote'
+        verbose_name_plural = 'Event Quotes'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.text_en[:50] if self.text_en else self.text_ar[:50]
+
+    @property
+    def text(self): return _pick(self.text_ar, self.text_en)
+
+
+class EventImage(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField('Image', upload_to='events/')
+    caption = models.CharField('Caption', max_length=200, blank=True)
+    order = models.PositiveIntegerField('Order', default=0)
+
+    class Meta:
+        verbose_name = 'Event Image'
+        verbose_name_plural = 'Event Images'
+        ordering = ['order']
+
+    def __str__(self):
+        return f'{self.event} — Image {self.order}'
+
+
+class EventSponsor(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='sponsors')
+    name = models.CharField('Sponsor Name', max_length=200)
+    logo = models.ImageField('Logo', upload_to='sponsors/')
+    url = models.URLField('Website', blank=True)
+    order = models.PositiveIntegerField('Order', default=0)
+
+    class Meta:
+        verbose_name = 'Event Sponsor'
+        verbose_name_plural = 'Event Sponsors'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.name
+
+
 class Page(models.Model):
     title_ar = models.CharField('Title (AR)', max_length=200)
     title_en = models.CharField('Title (EN)', max_length=200)

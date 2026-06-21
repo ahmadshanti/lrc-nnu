@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ event.title }} — LRC{% endblock %}
+
+{% block extra_css %}
+<style>
+.ev-hero {
+    position: relative;
+    min-height: 70vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    background: var(--blue-dark);
+}
+.ev-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+.ev-hero-bg.active { opacity: 1; }
+.ev-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(8,18,50,.92) 20%, rgba(8,18,50,.5) 60%, rgba(8,18,50,.7) 100%);
+    z-index: 1;
+}
+.ev-hero-content {
+    position: relative; z-index: 2;
+    padding: 3rem 0; width: 100%;
+}
+.ev-dots {
+    position: absolute; bottom: 2rem;
+    left: 50%; transform: translateX(-50%);
+    z-index: 3; display: flex; gap: .5rem;
+}
+.ev-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,.3); border: 2px solid rgba(255,255,255,.5);
+    cursor: pointer; transition: all .3s;
+}
+.ev-dot.active {
+    background: var(--orange); border-color: var(--orange); transform: scale(1.2);
+}
+.ev-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: linear-gradient(135deg, var(--orange), #f59e0b);
+    color: #fff; padding: .4rem 1.2rem; border-radius: 50px;
+    font-size: .75rem; font-weight: 700; letter-spacing: .06em;
+    margin-bottom: 1.2rem; box-shadow: 0 4px 16px rgba(217,119,6,.3);
+}
+.ev-content-card {
+    background: #fff; border-radius: 20px;
+    padding: 3rem; box-shadow: 0 8px 40px rgba(0,0,0,.06);
+    position: relative; overflow: hidden;
+}
+.ev-content-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--blue), var(--orange));
+}
+@media (max-width: 768px) { .ev-content-card { padding: 2rem 1.25rem; } }
+.event-stat {
+    text-align: center; padding: 1.5rem 1rem;
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.event-stat:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.1);
+}
+.ev-stat-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: #fff; margin-bottom: .75rem;
+}
+.ev-stat-num {
+    font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: .3rem;
+}
+.ev-stat-lbl {
+    font-size: .78rem; color: var(--text-muted); font-weight: 600;
+}
+.sponsor-logo {
+    width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+    border: 3px solid var(--border); background: #fff;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.sponsor-logo:hover {
+    transform: scale(1.12);
+    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO SLIDER ════════════════════════════════════════════════════════ -->
+<div class="ev-hero" id="evHero">
+    {% for img in event.images.all %}
+    <img class="ev-hero-bg {% if forloop.first %}active{% endif %}" src="{{ img.image.url }}" alt="{{ img.caption }}">
+    {% empty %}
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,var(--blue-dark),var(--blue));"></div>
+    {% endfor %}
+
+    <div class="ev-hero-overlay"></div>
+
+    <div class="container-lg ev-hero-content">
+        <div class="col-xl-8 col-lg-10" style="animation:fadeSlideUp .8s ease-out both;">
+            <div class="ev-badge">
+                <i class="bi bi-calendar-event"></i>
+                {% if event.date %}{{ event.date|date:"d M Y" }}{% else %}{% trans "Event" %}{% endif %}
+            </div>
+            <h1 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                       font-size:clamp(2rem,5vw,3.5rem);font-weight:800;color:#fff;
+                       line-height:1.15;margin-bottom:1rem;">
+                {{ event.title }}
+            </h1>
+            {% if event.subtitle %}
+            <p style="font-size:1.15rem;color:rgba(255,255,255,.6);max-width:580px;line-height:1.85;margin-bottom:0;">
+                {{ event.subtitle }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if event.images.count > 1 %}
+    <div class="ev-dots">
+        {% for img in event.images.all %}
+        <div class="ev-dot {% if forloop.first %}active{% endif %}" onclick="goSlide({{ forloop.counter0 }})"></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- ══ STATS ══════════════════════════════════════════════════════════════ -->
+{% if event.has_stats %}
+<section style="padding:2.5rem 0;background:var(--bg-alt);">
+    <div class="container-lg">
+        <div class="row g-3 stagger">
+            {% if event.stat1_number %}
+            <div class="col-6 col-md-3 reveal">
+                <div class="event-stat">
+                    <div class="ev-stat-icon" style="background:linear-gradient(135deg,var(--blue),#2563eb);">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="ev-stat-num">{{ event.stat1_number }}</div>
+                    <div class="ev-stat-lbl">{{ event.stat1_label }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% if event.stat2_number %}
+            <div class="col-6 col-md-3 reveal">
+                <div class="event-stat">
+                    <div class="ev-stat-icon" style="background:linear-gradient(135deg,var(--orange),#f59e0b);">
+                        <i class="bi bi-translate"></i>
+                    </div>
+                    <div class="ev-stat-num">{{ event.stat2_number }}</div>
+                    <div class="ev-stat-lbl">{{ event.stat2_label }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% if event.stat3_number %}
+            <div class="col-6 col-md-3 reveal">
+                <div class="event-stat">
+                    <div class="ev-stat-icon" style="background:linear-gradient(135deg,#059669,#10b981);">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="ev-stat-num">{{ event.stat3_number }}</div>
+                    <div class="ev-stat-lbl">{{ event.stat3_label }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% if event.stat4_number %}
+            <div class="col-6 col-md-3 reveal">
+                <div class="event-stat">
+                    <div class="ev-stat-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">
+                        <i class="bi bi-globe2"></i>
+                    </div>
+                    <div class="ev-stat-num">{{ event.stat4_number }}</div>
+                    <div class="ev-stat-lbl">{{ event.stat4_label }}</div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ══ CONTENT ════════════════════════════════════════════════════════════ -->
+<section style="padding:3.5rem 0 3rem;">
+    <div class="container-lg">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="ev-content-card reveal">
+                    <div style="font-size:1.05rem;color:var(--text);line-height:2.1;">
+                        {{ event.content|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ QUOTES ═════════════════════════════════════════════════════════════ -->
+{% if event.quotes.exists %}
+<section style="padding:2.5rem 0 3rem;background:var(--bg-alt);">
+    <div class="container-lg">
+        <div style="text-align:center;margin-bottom:2rem;" class="reveal">
+            <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                       font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:.4rem;">
+                {% trans "Student Voices" %}
+            </h2>
+            <p style="font-size:.88rem;color:var(--text-muted);">{% trans "What our participants say" %}</p>
+        </div>
+        <div class="row g-3 justify-content-center stagger">
+            {% for q in event.quotes.all %}
+            <div class="col-md-4 col-lg reveal">
+                <div style="background:#fff;border-radius:14px;padding:1.5rem;text-align:center;height:100%;
+                            box-shadow:0 2px 12px rgba(0,0,0,.04);transition:transform .3s ease,box-shadow .3s ease;
+                            border-top:3px solid transparent;background-image:linear-gradient(#fff,#fff),linear-gradient(90deg,var(--blue),var(--orange));
+                            background-origin:border-box;background-clip:padding-box,border-box;"
+                     onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,.1)'"
+                     onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,.04)'">
+                    <div style="font-size:1.5rem;color:var(--orange);margin-bottom:.6rem;"><i class="bi bi-quote"></i></div>
+                    <p style="font-size:.88rem;color:var(--text-muted);line-height:1.85;font-style:italic;margin:0 0 .5rem;">
+                        "{{ q.text }}"
+                    </p>
+                    {% if q.author %}
+                    <div style="font-size:.78rem;font-weight:700;color:var(--blue);">— {{ q.author }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ══ SPONSORS ═══════════════════════════════════════════════════════════ -->
+{% if event.sponsors.exists %}
+<section style="padding:3rem 0;">
+    <div class="container-lg">
+        <div style="text-align:center;margin-bottom:2rem;" class="reveal">
+            <div style="display:inline-flex;align-items:center;justify-content:center;
+                        width:52px;height:52px;border-radius:14px;
+                        background:linear-gradient(135deg,var(--orange),#f59e0b);
+                        margin-bottom:1rem;">
+                <i class="bi bi-award-fill" style="font-size:1.3rem;color:#fff;"></i>
+            </div>
+            <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                       font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:.4rem;">
+                {% trans "Our Sponsors" %}
+            </h2>
+        </div>
+        <div class="d-flex flex-wrap gap-3 justify-content-center reveal">
+            {% for sponsor in event.sponsors.all %}
+            {% if sponsor.url %}
+            <a href="{{ sponsor.url }}" target="_blank" rel="noopener" title="{{ sponsor.name }}">
+                <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" class="sponsor-logo">
+            </a>
+            {% else %}
+            <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" class="sponsor-logo" title="{{ sponsor.name }}">
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ══ CTA ═════════════════════════════════════════════════════════════════ -->
+<section class="reveal" style="background:linear-gradient(135deg,#0a1940 0%,var(--blue) 50%,#2563eb 100%);
+               padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;pointer-events:none;">
+        <div style="position:absolute;top:10%;left:8%;font-size:4rem;color:rgba(255,255,255,.04);animation:float1 6s ease-in-out infinite;">
+            <i class="bi bi-calendar-event-fill"></i>
+        </div>
+    </div>
+    <div class="container-lg" style="position:relative;z-index:2;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;
+                    width:60px;height:60px;border-radius:50%;
+                    background:linear-gradient(135deg,var(--orange),#f59e0b);
+                    margin-bottom:1.2rem;animation:pulse 2.5s ease-in-out infinite;
+                    box-shadow:0 6px 24px rgba(217,119,6,.35);">
+            <i class="bi bi-rocket-takeoff-fill" style="font-size:1.3rem;color:#fff;"></i>
+        </div>
+        <h2 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                   color:#fff;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:.65rem;">
+            {% trans "Want to Participate?" %}
+        </h2>
+        <p style="color:rgba(255,255,255,.55);font-size:.95rem;max-width:440px;margin:0 auto 1.75rem;line-height:1.85;">
+            {% trans "Whether as a student, sponsor, or partner — join us in making the next event even bigger." %}
+        </p>
+        <a href="{% url 'main:contact' %}" class="cta-glow-btn">
+            <i class="bi bi-arrow-right-circle-fill" style="margin-inline-end:.4rem;"></i>
+            {% trans "Contact Us" %}
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+{% if event.images.count > 1 %}
+<script>
+(function() {
+    var slides = document.querySelectorAll('.ev-hero-bg');
+    var dots = document.querySelectorAll('.ev-dot');
+    var current = 0;
+    var total = slides.length;
+
+    window.goSlide = function(n) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = n;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    };
+
+    setInterval(function() {
+        goSlide((current + 1) % total);
+    }, 3000);
+})();
+</script>
+{% endif %}
+{% endblock %}
