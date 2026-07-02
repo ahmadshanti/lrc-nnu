@@ -41,6 +41,7 @@ class Announcement(models.Model):
     title_en = models.CharField('Title (EN)', max_length=250)
     content_ar = models.TextField('Content (AR)', blank=True)
     content_en = models.TextField('Content (EN)', blank=True)
+    image = models.ImageField('Image', upload_to='announcements/', blank=True, null=True)
     date = models.DateTimeField('Date', auto_now_add=True)
     is_published = models.BooleanField('Published', default=True)
 
