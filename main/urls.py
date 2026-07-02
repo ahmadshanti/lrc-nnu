@@ -12,6 +12,7 @@ urlpatterns = [
     path('stories/', views.stories, name='stories'),
     path('team/', views.team, name='team'),
     path('contact/', views.contact, name='contact'),
+    path('announcements/<int:pk>/', views.announcement_detail, name='announcement_detail'),
     path('events/', views.events, name='events'),
     path('events/<slug:slug>/', views.event_detail, name='event_detail'),
     path('pages/<slug:slug>/', views.page_view, name='page'),

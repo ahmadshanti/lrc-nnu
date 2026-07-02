@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from ckeditor.widgets import CKEditorWidget
 
-from .models import Announcement, Event, EventImage, EventQuote, EventSection, GalleryImage, HeroSlide, News, Page, SiteSetting, Sponsor, Story, TeamMember
+from .models import Announcement, AnnouncementImage, Event, EventImage, EventQuote, EventSection, GalleryImage, HeroSlide, News, Page, SiteSetting, Sponsor, Story, TeamMember
 
 RICH_TEXT = {models.TextField: {'widget': CKEditorWidget}}
 
@@ -20,6 +20,12 @@ class NewsAdmin(admin.ModelAdmin):
     formfield_overrides = RICH_TEXT
 
 
+class AnnouncementImageInline(admin.TabularInline):
+    model = AnnouncementImage
+    extra = 1
+    fields = ('image', 'caption', 'order')
+
+
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'date', 'is_published')
@@ -27,8 +33,9 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_editable = ('is_published',)
     search_fields = ('title_en', 'title_ar')
     date_hierarchy = 'date'
-    fields = ('title_ar', 'title_en', 'content_ar', 'content_en', 'image', 'is_published')
+    fields = ('title_ar', 'title_en', 'content_ar', 'content_en', 'is_published')
     formfield_overrides = RICH_TEXT
+    inlines = [AnnouncementImageInline]
 
 
 @admin.register(GalleryImage)

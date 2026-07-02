@@ -41,7 +41,6 @@ class Announcement(models.Model):
     title_en = models.CharField('Title (EN)', max_length=250)
     content_ar = models.TextField('Content (AR)', blank=True)
     content_en = models.TextField('Content (EN)', blank=True)
-    image = models.ImageField('Image', upload_to='announcements/', blank=True, null=True)
     date = models.DateTimeField('Date', auto_now_add=True)
     is_published = models.BooleanField('Published', default=True)
 
@@ -53,6 +52,9 @@ class Announcement(models.Model):
     def __str__(self):
         return self.title_en or self.title_ar
 
+    def get_absolute_url(self):
+        return reverse('main:announcement_detail', kwargs={'pk': self.pk})
+
     @property
     def title(self):
         return _pick(self.title_ar, self.title_en)
@@ -60,6 +62,26 @@ class Announcement(models.Model):
     @property
     def content(self):
         return _pick(self.content_ar, self.content_en)
+
+    @property
+    def cover_image(self):
+        img = self.images.first()
+        return img.image if img else None
+
+
+class AnnouncementImage(models.Model):
+    announcement = models.ForeignKey(Announcement, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField('Image', upload_to='announcements/')
+    caption = models.CharField('Caption', max_length=200, blank=True)
+    order = models.PositiveIntegerField('Order', default=0)
+
+    class Meta:
+        verbose_name = 'Announcement Image'
+        verbose_name_plural = 'Announcement Images'
+        ordering = ['order']
+
+    def __str__(self):
+        return f'{self.announcement} — Image {self.order}'
 
 
 class GalleryImage(models.Model):
