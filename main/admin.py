@@ -151,6 +151,7 @@ class EventSectionInline(admin.StackedInline):
     model = EventSection
     extra = 1
     fields = (('title_ar', 'title_en'), 'content_ar', 'content_en', ('icon', 'order'))
+    formfield_overrides = RICH_TEXT
 
 
 class EventImageInline(admin.TabularInline):
