@@ -265,6 +265,7 @@ class Event(models.Model):
     stat4_number = models.CharField('Stat 4 Number', max_length=20, blank=True)
     stat4_label_ar = models.CharField('Stat 4 Label (AR)', max_length=100, blank=True)
     stat4_label_en = models.CharField('Stat 4 Label (EN)', max_length=100, blank=True)
+    sponsors = models.ManyToManyField('Sponsor', blank=True, verbose_name='Sponsors')
 
     class Meta:
         verbose_name = 'Event'
@@ -293,6 +294,30 @@ class Event(models.Model):
     def stat4_label(self): return _pick(self.stat4_label_ar, self.stat4_label_en)
     @property
     def has_stats(self): return bool(self.stat1_number)
+
+
+class EventSection(models.Model):
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, related_name='sections')
+    title_ar = models.CharField('Section Title (AR)', max_length=200)
+    title_en = models.CharField('Section Title (EN)', max_length=200)
+    content_ar = models.TextField('Content (AR)')
+    content_en = models.TextField('Content (EN)')
+    icon = models.CharField('Bootstrap Icon', max_length=60, blank=True,
+                            help_text='e.g. bi-star-fill, bi-globe2, bi-people-fill')
+    order = models.PositiveIntegerField('Order', default=0)
+
+    class Meta:
+        verbose_name = 'Event Section'
+        verbose_name_plural = 'Event Sections'
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title_en or self.title_ar
+
+    @property
+    def title(self): return _pick(self.title_ar, self.title_en)
+    @property
+    def content(self): return _pick(self.content_ar, self.content_en)
 
 
 class EventQuote(models.Model):
@@ -329,17 +354,16 @@ class EventImage(models.Model):
         return f'{self.event} — Image {self.order}'
 
 
-class EventSponsor(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='sponsors')
+class Sponsor(models.Model):
     name = models.CharField('Sponsor Name', max_length=200)
     logo = models.ImageField('Logo', upload_to='sponsors/')
     url = models.URLField('Website', blank=True)
     order = models.PositiveIntegerField('Order', default=0)
 
     class Meta:
-        verbose_name = 'Event Sponsor'
-        verbose_name_plural = 'Event Sponsors'
-        ordering = ['order']
+        verbose_name = 'Sponsor'
+        verbose_name_plural = 'Sponsors'
+        ordering = ['order', 'name']
 
     def __str__(self):
         return self.name

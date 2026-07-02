@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from ckeditor.widgets import CKEditorWidget
 
-from .models import Announcement, Event, EventImage, EventQuote, EventSponsor, GalleryImage, HeroSlide, News, Page, SiteSetting, Story, TeamMember
+from .models import Announcement, Event, EventImage, EventQuote, EventSection, GalleryImage, HeroSlide, News, Page, SiteSetting, Sponsor, Story, TeamMember
 
 RICH_TEXT = {models.TextField: {'widget': CKEditorWidget}}
 
@@ -139,6 +139,20 @@ class PageAdmin(admin.ModelAdmin):
     formfield_overrides = RICH_TEXT
 
 
+@admin.register(Sponsor)
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order')
+    list_editable = ('order',)
+    search_fields = ('name',)
+    fields = ('name', 'logo', 'url', 'order')
+
+
+class EventSectionInline(admin.StackedInline):
+    model = EventSection
+    extra = 1
+    fields = (('title_ar', 'title_en'), 'content_ar', 'content_en', ('icon', 'order'))
+
+
 class EventImageInline(admin.TabularInline):
     model = EventImage
     extra = 1
@@ -149,11 +163,6 @@ class EventQuoteInline(admin.TabularInline):
     extra = 1
 
 
-class EventSponsorInline(admin.TabularInline):
-    model = EventSponsor
-    extra = 1
-
-
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'date', 'is_published')
@@ -161,7 +170,8 @@ class EventAdmin(admin.ModelAdmin):
     list_editable = ('is_published',)
     search_fields = ('title_en', 'title_ar')
     prepopulated_fields = {'slug': ('title_en',)}
-    inlines = [EventImageInline, EventQuoteInline, EventSponsorInline]
+    inlines = [EventImageInline, EventSectionInline, EventQuoteInline]
+    filter_horizontal = ('sponsors',)
     fieldsets = [
         ('Content', {'fields': [
             ('title_ar', 'title_en'),
@@ -175,5 +185,6 @@ class EventAdmin(admin.ModelAdmin):
             ('stat4_number', 'stat4_label_ar', 'stat4_label_en'),
         ], 'classes': ['collapse']}),
         ('Settings', {'fields': ['date', 'slug', 'is_published']}),
+        ('Sponsors', {'fields': ['sponsors']}),
     ]
     formfield_overrides = RICH_TEXT

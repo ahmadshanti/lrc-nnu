@@ -205,6 +205,48 @@
     </div>
 </section>
 
+<!-- ══ EXTRA SECTIONS ═════════════════════════════════════════════════════ -->
+{% with sections=event.sections.all %}
+{% if sections %}
+<section style="padding:1rem 0 3rem;background:var(--bg-alt);">
+    <div class="container-lg">
+        <div class="row g-4 stagger">
+            {% for sec in sections %}
+            <div class="col-md-6 reveal">
+                <div style="background:#fff;border-radius:16px;padding:2rem;height:100%;
+                            box-shadow:0 2px 16px rgba(0,0,0,.05);position:relative;overflow:hidden;
+                            transition:transform .35s ease,box-shadow .35s ease;"
+                     onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,.1)'"
+                     onmouseout="this.style.transform='';this.style.boxShadow='0 2px 16px rgba(0,0,0,.05)'">
+                    <div style="position:absolute;top:0;left:0;right:0;height:4px;
+                                background:linear-gradient(90deg,var(--blue),var(--orange));"></div>
+                    <div style="display:flex;align-items:flex-start;gap:1rem;">
+                        {% if sec.icon %}
+                        <div style="flex-shrink:0;width:48px;height:48px;border-radius:12px;
+                                    background:linear-gradient(135deg,var(--blue),#2563eb);
+                                    display:flex;align-items:center;justify-content:center;">
+                            <i class="bi {{ sec.icon }}" style="font-size:1.2rem;color:#fff;"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h3 style="font-family:{% if LANGUAGE_BIDI %}'Almarai'{% else %}'Sora'{% endif %},sans-serif;
+                                       font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:.6rem;">
+                                {{ sec.title }}
+                            </h3>
+                            <div style="font-size:.9rem;color:var(--text-muted);line-height:1.9;">
+                                {{ sec.content|safe }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endwith %}
+
 <!-- ══ QUOTES ═════════════════════════════════════════════════════════════ -->
 {% if event.quotes.exists %}
 <section style="padding:2.5rem 0 3rem;background:var(--bg-alt);">
