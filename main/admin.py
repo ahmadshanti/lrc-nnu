@@ -27,7 +27,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_editable = ('is_published',)
     search_fields = ('title_en', 'title_ar')
     date_hierarchy = 'date'
-    fields = ('title_ar', 'title_en', 'is_published')
+    fields = ('title_ar', 'title_en', 'content_ar', 'content_en', 'is_published')
+    formfield_overrides = RICH_TEXT
 
 
 @admin.register(GalleryImage)

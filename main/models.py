@@ -39,6 +39,8 @@ class News(models.Model):
 class Announcement(models.Model):
     title_ar = models.CharField('Title (AR)', max_length=250)
     title_en = models.CharField('Title (EN)', max_length=250)
+    content_ar = models.TextField('Content (AR)', blank=True)
+    content_en = models.TextField('Content (EN)', blank=True)
     date = models.DateTimeField('Date', auto_now_add=True)
     is_published = models.BooleanField('Published', default=True)
 
@@ -53,6 +55,10 @@ class Announcement(models.Model):
     @property
     def title(self):
         return _pick(self.title_ar, self.title_en)
+
+    @property
+    def content(self):
+        return _pick(self.content_ar, self.content_en)
 
 
 class GalleryImage(models.Model):
